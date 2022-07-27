@@ -1,0 +1,247 @@
+{% import time %}
+
+<html>
+
+<head>
+    <title>Leona'sPlayList</title>
+    <meta name="description" content="獅子神レオナの歌枠アーカイブの横断検索サービスです。誰でもコンテンツ追加ができます。">
+    <meta name=”keywords” content=”獅子神レオナ,獅子神,レオナ,プレイリスト,shishigami,leona,playlist,LeonasPlayList”>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--    依存があるのでJQ読み込み-->
+    <script src="{{static_url('js')}}/jquery-3.4.1.min.js"></script>
+
+
+    <!--     UIkit CSS -->
+    <link rel="stylesheet" href="{{static_url('css')}}/uikit.min.css" />
+
+    <!--    materialize CSS JS-->
+    <link rel="stylesheet" href="{{static_url('css')}}/materialize.min.css">
+    <link href="{{static_url('css')}}/icon.css" rel="stylesheet">
+
+
+    <!--     UIkit JS -->
+    <script src="https://cdn.jsdelivr.net/npm/uikit@3.3.3/dist/js/uikit.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/uikit@3.3.3/dist/js/uikit-icons.min.js"></script>
+
+    <!--    youtubeのiframeが重すぎるので軽量化のライブラリ入れる-->
+    <!-- Include the CSS & JS.. (This could be direct from the package or bundled) -->
+    <link rel="stylesheet" href="{{static_url('css')}}/lite-yt-embed.css" />
+
+    <script src="{{static_url('js')}}/lite-yt-embed.js"></script>
+
+    <!--    google-->
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-Z5HKRTH4KW"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+
+        gtag('config', 'G-Z5HKRTH4KW');
+
+    </script>
+
+
+    <!--    favicon-->
+    <meta name="msapplication-square70x70logo" content="/site-tile-70x70.png">
+    <meta name="msapplication-square150x150logo" content="/site-tile-150x150.png">
+    <meta name="msapplication-wide310x150logo" content="/site-tile-310x150.png">
+    <meta name="msapplication-square310x310logo" content="/site-tile-310x310.png">
+    <meta name="msapplication-TileColor" content="#0078d7">
+    <link rel="shortcut icon" type="image/vnd.microsoft.icon" href="{{static_url('image/favicons')}}/favicon.ico">
+    <link rel="icon" type="image/vnd.microsoft.icon" href="{{static_url('image/favicons')}}/favicon.ico">
+    <link rel="apple-touch-icon" sizes="57x57" href="{{static_url('image/favicons')}}/apple-touch-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="{{static_url('image/favicons')}}/apple-touch-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="{{static_url('image/favicons')}}/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="{{static_url('image/favicons')}}/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="{{static_url('image/favicons')}}/apple-touch-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="{{static_url('image/favicons')}}/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="{{static_url('image/favicons')}}/apple-touch-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="{{static_url('image/favicons')}}/apple-touch-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{static_url('image/favicons')}}/apple-touch-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="36x36" href="{{static_url('image/favicons')}}/android-chrome-36x36.png">
+    <link rel="icon" type="image/png" sizes="48x48" href="{{static_url('image/favicons')}}/android-chrome-48x48.png">
+    <link rel="icon" type="image/png" sizes="72x72" href="{{static_url('image/favicons')}}/android-chrome-72x72.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="{{static_url('image/favicons')}}/android-chrome-96x96.png">
+    <link rel="icon" type="image/png" sizes="128x128" href="{{static_url('image/favicons')}}/android-chrome-128x128.png">
+    <link rel="icon" type="image/png" sizes="144x144" href="{{static_url('image/favicons')}}/android-chrome-144x144.png">
+    <link rel="icon" type="image/png" sizes="152x152" href="{{static_url('image/favicons')}}/android-chrome-152x152.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="{{static_url('image/favicons')}}/android-chrome-192x192.png">
+    <link rel="icon" type="image/png" sizes="256x256" href="{{static_url('image/favicons')}}/android-chrome-256x256.png">
+    <link rel="icon" type="image/png" sizes="384x384" href="{{static_url('image/favicons')}}/android-chrome-384x384.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="{{static_url('image/favicons')}}/android-chrome-512x512.png">
+    <link rel="icon" type="image/png" sizes="36x36" href="{{static_url('image/favicons')}}/icon-36x36.png">
+    <link rel="icon" type="image/png" sizes="48x48" href="{{static_url('image/favicons')}}/icon-48x48.png">
+    <link rel="icon" type="image/png" sizes="72x72" href="{{static_url('image/favicons')}}/icon-72x72.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="{{static_url('image/favicons')}}/icon-96x96.png">
+    <link rel="icon" type="image/png" sizes="128x128" href="{{static_url('image/favicons')}}/icon-128x128.png">
+    <link rel="icon" type="image/png" sizes="144x144" href="{{static_url('image/favicons')}}/icon-144x144.png">
+    <link rel="icon" type="image/png" sizes="152x152" href="{{static_url('image/favicons')}}/icon-152x152.png">
+    <link rel="icon" type="image/png" sizes="160x160" href="{{static_url('image/favicons')}}/icon-160x160.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="{{static_url('image/favicons')}}/icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="196x196" href="{{static_url('image/favicons')}}/icon-196x196.png">
+    <link rel="icon" type="image/png" sizes="256x256" href="{{static_url('image/favicons')}}/icon-256x256.png">
+    <link rel="icon" type="image/png" sizes="384x384" href="{{static_url('image/favicons')}}/icon-384x384.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="{{static_url('image/favicons')}}/icon-512x512.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{static_url('image/favicons')}}/icon-16x16.png">
+    <link rel="icon" type="image/png" sizes="24x24" href="{{static_url('image/favicons')}}/icon-24x24.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{static_url('image/favicons')}}/icon-32x32.png">
+    <link rel="manifest" href="{{static_url('image/favicons')}}/manifest.json">
+
+
+    <!--    メインCSS読み込み-->
+    <link rel="stylesheet" type="text/css" href="{{static_url('css')}}/style.css?t={{str(time.time())}}">
+    <!--    youtube埋め込み用スクリプト読み込み-->
+    <script src="https://www.youtube.com/iframe_api"></script>
+
+</head>
+
+<body>
+
+    <nav class="amber">
+        <div class="nav-wrapper">
+            <a href="#" class="brand-logo title center">Leonas'sPlayList</a>
+            <ul id="nav-mobile">
+                <li class="search-area" onclick="expandSearch();">
+                    <form method="get">
+                        <div class="input-field">
+                            <input id="search" onBlur="hideSearch();" name="search" type="search" autocomplete="off">
+                            <label class="label-icon" for="search">
+                                <i class="material-icons">search</i>
+                            </label>
+                        </div>
+                    </form>
+                </li>
+                <li><a href="/list">曲一覧</a></li>
+                <!--          ここに配信ごとにまとめて検索するとか、登録済みの曲一覧の機能追加するかも・・・。しないかも。-->
+                <!--
+        <li><a href="sass.html">Sass</a></li>
+        <li><a href="badges.html">Components</a></li>
+        <li><a href="collapsible.html">JavaScript</a></li>
+-->
+            </ul>
+        </div>
+    </nav>
+    <div class="slider">
+        <ul class="slides">
+            <li>
+                <img src="{{ static_url('image/yuki_leona_header_trim.avif') }}">
+            </li>
+            <li>
+                <img src="{{ static_url('image/hiiragisan_leona.avif') }}">
+            </li>
+            <li>
+                <img src="{{ static_url('image/yuki_leona_woy_large.avif') }}">
+            </li>
+        </ul>
+    </div>
+    {% module xsrf_form_html() %}
+    <div class="row" id='content-area' class="flex">
+        <!--        テンプレート展開-->
+
+    </div>
+
+
+    <template id="content-template">
+        <div class="col s12 m3 delay-time02 fadeUp hoverable content-card" id="content-root">
+            <div class="card">
+                <div class="card-image">
+                    <lite-youtube id="youtube" videoid="" params=""></lite-youtube>
+
+                </div>
+                <div class="card-content">
+                    <span class="card-title music-title" id='title'>曲名</span>
+                    <a id="youtubeapp-btn" href="https://www.youtube.com/watch?v=">
+                        <p>Youtubeで見る</p>
+                    </a>
+                </div>
+                <div class="card-action">
+                    <a id="share" href="" class="" data-show-count="false" uk-icon="icon: twitter"></a>
+                    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+                    <button id="delete-btn" uk-toggle="target: #delete-confirm-modal" type="button" uk-icon="icon: trash"></button>
+                </div>
+            </div>
+        </div>
+    </template>
+    <template id="loading-template">
+        <div class="col s12 m3 delay-time02 loading fadeUp" id="loading-area">
+            <div class="card loading">
+                <div class="card-content">
+                    <div class="balloon4 center-align">
+                        <p id="loading-text">読込中...</p>
+                    </div>
+                    <img class="center-align" class="responsive-img" src="{{ static_url('image/yuki_leona_woy_small.png') }}">
+
+                </div>
+            </div>
+        </div>
+    </template>
+    <div class="new-content-button" uk-toggle="target: #new-content-modal">
+        <div class="balloon-right">
+            <p>新しい歌を追加してね！</p>
+        </div>
+        <img class="rotate-bottom" width="120px" src="{{ static_url('image/yuki_leona_new_song_small.png') }}">
+    </div>
+    <div id="new-content-modal" uk-modal>
+        <div class="uk-modal-dialog uk-modal-body uk-light uk-background-secondary uk-padding">
+            <h4 class="uk-modal-title">新規投稿</h4>
+            <form method="post" id="new-content-form">
+                <p>URL<input name="url" class="uk-input" placeholder="https://youtu.be/10p6I66I4KU" autocomplete="off" onfocus="this.select();"></p>
+                <p>曲名(|で区切ることで複数同時に登録できます)<input name="title" class="uk-input" placeholder="はっぴーでいず！" autocomplete="off" onfocus="this.select();"></p>
+                <p>開始時間(|で区切ることで複数同時に登録できます)<input name="time" class="uk-input" placeholder="00:00:00" autocomplete="off" onfocus="this.select();"></p>
+                <button type="button" onclick="postNewContent();" class="uk-button uk-button-default">登録</button>
+            </form>
+
+        </div>
+    </div>
+    <div id="delete-confirm-modal" uk-modal>
+        <div class="uk-modal-dialog uk-modal-body uk-light uk-background-secondary uk-padding">
+            <h4 class="uk-modal-title">削除確認</h4>
+            <p>消していいですか？</p>
+            <form method="post" id="delete-content-form">
+                <input type="hidden" name="target" value="None" id='delete-target'>
+                <button type="button" onclick="postDeleteContent();" class="uk-button uk-button-default">削除</button>
+            </form>
+        </div>
+    </div>
+
+
+    <footer class="page-footer amber" style="position: fixed;width: 100%;margin-bottom: 0px;bottom: 0;">
+        <div class="container">
+            <div class="row">
+                <div class="col s4 center-align">
+                      <i class="material-icons">fast_rewind</i>
+                </div>
+                <div class="col s4 center-align">
+                      <i class="material-icons">pause</i>
+                </div>
+                <div class="col s4 center-align">
+                      <i onclick="document.getElementsByTagName('lite-youtube')[0].click()" class="material-icons">fast_forward</i>
+                </div>
+            </div>
+        </div>
+<!--
+        <div class="footer-copyright">
+            <div class="container">
+                © 2014 Copyright Text
+                <a class="grey-text text-lighten-4 right" href="#!">More Links</a>
+            </div>
+        </div>
+-->
+    </footer>
+
+    <!--    Materialize JS読み込み-->
+    <script src="{{static_url('js')}}/materialize.min.js"></script>
+    <!--    メインスクリプト読み込み-->
+    <script src="{{static_url('js')}}/index.js?t={{str(time.time())}}"></script>
+
+
+</body>
+
+</html>

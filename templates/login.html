@@ -1,0 +1,204 @@
+{% import time %}
+
+<html>
+
+<head>
+    <title>Leona'sPlayList</title>
+    <meta name="description" content="獅子神レオナの歌枠アーカイブの横断検索サービスです。誰でもコンテンツ追加ができます。">
+    <meta name=”keywords” content=”獅子神レオナ,獅子神,レオナ,プレイリスト,shishigami,leona,playlist,LeonasPlayList”>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--    依存があるのでJQ読み込み-->
+    <script src="{{static_url('js')}}/jquery-3.4.1.min.js"></script>
+
+
+    <!--     UIkit CSS -->
+    <link rel="stylesheet" href="{{static_url('css')}}/uikit.min.css" />
+
+    <!--    materialize CSS JS-->
+    <link rel="stylesheet" href="{{static_url('css')}}/materialize.min.css">
+    <link href="{{static_url('css')}}/icon.css" rel="stylesheet">
+
+
+    <!--     UIkit JS -->
+    <script src="https://cdn.jsdelivr.net/npm/uikit@3.3.3/dist/js/uikit.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/uikit@3.3.3/dist/js/uikit-icons.min.js"></script>
+
+    <!--    youtubeのiframeが重すぎるので軽量化のライブラリ入れる-->
+    <!-- Include the CSS & JS.. (This could be direct from the package or bundled) -->
+    <link rel="stylesheet" href="{{static_url('css')}}/lite-yt-embed.css" />
+
+    <script src="{{static_url('js')}}/lite-yt-embed.js"></script>
+
+    <!--    google-->
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-Z5HKRTH4KW"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+
+        gtag('config', 'G-Z5HKRTH4KW');
+
+    </script>
+
+
+    <!--    favicon-->
+    <meta name="msapplication-square70x70logo" content="/site-tile-70x70.png">
+    <meta name="msapplication-square150x150logo" content="/site-tile-150x150.png">
+    <meta name="msapplication-wide310x150logo" content="/site-tile-310x150.png">
+    <meta name="msapplication-square310x310logo" content="/site-tile-310x310.png">
+    <meta name="msapplication-TileColor" content="#0078d7">
+    <link rel="shortcut icon" type="image/vnd.microsoft.icon" href="{{static_url('image/favicons')}}/favicon.ico">
+    <link rel="icon" type="image/vnd.microsoft.icon" href="{{static_url('image/favicons')}}/favicon.ico">
+    <link rel="apple-touch-icon" sizes="57x57" href="{{static_url('image/favicons')}}/apple-touch-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="{{static_url('image/favicons')}}/apple-touch-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="{{static_url('image/favicons')}}/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="{{static_url('image/favicons')}}/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="{{static_url('image/favicons')}}/apple-touch-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="{{static_url('image/favicons')}}/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="{{static_url('image/favicons')}}/apple-touch-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="{{static_url('image/favicons')}}/apple-touch-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{static_url('image/favicons')}}/apple-touch-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="36x36" href="{{static_url('image/favicons')}}/android-chrome-36x36.png">
+    <link rel="icon" type="image/png" sizes="48x48" href="{{static_url('image/favicons')}}/android-chrome-48x48.png">
+    <link rel="icon" type="image/png" sizes="72x72" href="{{static_url('image/favicons')}}/android-chrome-72x72.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="{{static_url('image/favicons')}}/android-chrome-96x96.png">
+    <link rel="icon" type="image/png" sizes="128x128" href="{{static_url('image/favicons')}}/android-chrome-128x128.png">
+    <link rel="icon" type="image/png" sizes="144x144" href="{{static_url('image/favicons')}}/android-chrome-144x144.png">
+    <link rel="icon" type="image/png" sizes="152x152" href="{{static_url('image/favicons')}}/android-chrome-152x152.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="{{static_url('image/favicons')}}/android-chrome-192x192.png">
+    <link rel="icon" type="image/png" sizes="256x256" href="{{static_url('image/favicons')}}/android-chrome-256x256.png">
+    <link rel="icon" type="image/png" sizes="384x384" href="{{static_url('image/favicons')}}/android-chrome-384x384.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="{{static_url('image/favicons')}}/android-chrome-512x512.png">
+    <link rel="icon" type="image/png" sizes="36x36" href="{{static_url('image/favicons')}}/icon-36x36.png">
+    <link rel="icon" type="image/png" sizes="48x48" href="{{static_url('image/favicons')}}/icon-48x48.png">
+    <link rel="icon" type="image/png" sizes="72x72" href="{{static_url('image/favicons')}}/icon-72x72.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="{{static_url('image/favicons')}}/icon-96x96.png">
+    <link rel="icon" type="image/png" sizes="128x128" href="{{static_url('image/favicons')}}/icon-128x128.png">
+    <link rel="icon" type="image/png" sizes="144x144" href="{{static_url('image/favicons')}}/icon-144x144.png">
+    <link rel="icon" type="image/png" sizes="152x152" href="{{static_url('image/favicons')}}/icon-152x152.png">
+    <link rel="icon" type="image/png" sizes="160x160" href="{{static_url('image/favicons')}}/icon-160x160.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="{{static_url('image/favicons')}}/icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="196x196" href="{{static_url('image/favicons')}}/icon-196x196.png">
+    <link rel="icon" type="image/png" sizes="256x256" href="{{static_url('image/favicons')}}/icon-256x256.png">
+    <link rel="icon" type="image/png" sizes="384x384" href="{{static_url('image/favicons')}}/icon-384x384.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="{{static_url('image/favicons')}}/icon-512x512.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{static_url('image/favicons')}}/icon-16x16.png">
+    <link rel="icon" type="image/png" sizes="24x24" href="{{static_url('image/favicons')}}/icon-24x24.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{static_url('image/favicons')}}/icon-32x32.png">
+    <link rel="manifest" href="{{static_url('image/favicons')}}/manifest.json">
+
+
+    <!--    メインCSS読み込み-->
+    <link rel="stylesheet" type="text/css" href="{{static_url('css')}}/style.css?t={{str(time.time())}}">
+    <!--    youtube埋め込み用スクリプト読み込み-->
+    <script src="https://www.youtube.com/iframe_api"></script>
+
+</head>
+
+<body>
+
+    <nav class="amber" style="margin-top: -5rem">
+        <div class="nav-wrapper">
+            <a href="#" class="brand-logo title center col s7">Leona'sPlayList</a>
+            <div class="row">
+                <!--
+            <ul id="nav-mobile" class="col s4">
+                <li class="search-area" onclick="expandSearch();">
+-->
+                <div class="col s9" onclick="expandSearch();">
+                    <form method="get">
+                        <div class="input-field">
+                            <input id="search" onBlur="hideSearch();" name="search" type="search" autocomplete="off">
+                            <label class="label-icon" for="search">
+                                <i class="material-icons">search</i>
+                            </label>
+                        </div>
+                    </form>
+                </div>
+                <!--                </li>-->
+                <!--                <li>-->
+                <div class="col s1 center-align">
+
+                    <a href="/list">
+                        <i class="material-icons">format_list_bulleted</i>
+                    </a>
+                </div>
+                <div class="col s1 center-align center-align">
+                    <a href="/" class="icon">
+                        <i class="material-icons">home</i>
+                    </a>
+                    <a data-target='fav-modal' class="icon modal-trigger">
+                        <i class="material-icons">star</i>
+                    </a>
+                </div>
+                <div class="col s1 center-align">
+                    <a href="/login">
+                        <i class="material-icons">person
+                        </i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main style="margin-top: 5rem">
+        <center>
+            <!--      <div class="section"></div>-->
+
+            <h5 class="amber-text-lighten-5">ログインしてください</h5>
+            <div class="section"></div>
+
+            <div class="container">
+                <div class="z-depth-1 grey lighten-4 row" style="display: inline-block; padding: 32px 48px 0px 48px; border: 1px solid #EEE;">
+
+                    <form class="col s12" method="post">
+                        <div class='row'>
+                            <div class='input-field col s12'>
+                                <input class='validate' type='email' name='e-mail' id='email' />
+                                <label for='email'>メールアドレス</label>
+                            </div>
+                        </div>
+
+                        <div class='row'>
+                            <div class='input-field col s12'>
+                                <input class='validate' type='password' name='password' id='password' />
+                                <label for='password'>パスワード</label>
+                            </div>
+                        {% module xsrf_form_html() %}
+<!--
+                            <label style='float: right;'>
+                                <a class='pink-text' href='/password-forgot'><b>パスワード再登録</b></a>
+                            </label>
+-->
+                        </div>
+
+                        <br />
+                        <center>
+                            <div class='row'>
+                                <button type='submit' name='btn_login' class='col s12 btn btn-large waves-effect amber'>ログイン</button>
+                            </div>
+                        </center>
+                    </form>
+                </div>
+            </div>
+            <a href="create-account">アカウントを作成する</a>
+        </center>
+
+    </main>
+
+    <!--    Materialize JS読み込み-->
+    <script src="{{static_url('js')}}/materialize.min.js"></script>
+    <!--    メインスクリプト読み込み-->
+    <script src="{{static_url('js')}}/index.js?t={{str(time.time())}}"></script>
+
+
+</body>
+
+</html>
