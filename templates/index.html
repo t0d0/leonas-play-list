@@ -1,6 +1,6 @@
-{% import time %}
+{% import time as time %}
 
-<html>
+<html lang="ja">
 
 <head>
     <title>Leona'sPlayList</title>
@@ -95,7 +95,6 @@
     <link rel="icon" type="image/png" sizes="32x32" href="{{static_url('image/favicons')}}/icon-32x32.png">
     <link rel="manifest" href="{{static_url('image/favicons')}}/manifest.json">
 
-
     <!--    メインCSS読み込み-->
     <link rel="stylesheet" type="text/css" href="{{static_url('css')}}/style.css?t={{str(time.time())}}">
     <!--    youtube埋め込み用スクリプト読み込み-->
@@ -109,10 +108,6 @@
         <div class="nav-wrapper">
             <a href="#" class="brand-logo title center col s7">Leona'sPlayList</a>
             <div class="row">
-                <!--
-            <ul id="nav-mobile" class="col s4">
-                <li class="search-area" onclick="expandSearch();">
--->
                 <div class="col s9" onclick="expandSearch();">
                     <form method="get">
                         <div class="input-field">
@@ -123,8 +118,6 @@
                         </div>
                     </form>
                 </div>
-                <!--                </li>-->
-                <!--                <li>-->
                 <div class="col s1 center-align">
 
                     <a href="/list">
@@ -164,19 +157,19 @@
     <div class="slider">
         <ul class="slides">
             <li>
-                <img src="{{ static_url('image/yuki_leona_header_trim.avif') }}">
+                <img src="{{ static_url('image/yuki_leona_header_trim.avif') }}" alt="header-1">
             </li>
             <li>
-                <img src="{{ static_url('image/hiiragisan_leona.avif') }}">
+                <img src="{{ static_url('image/hiiragisan_leona.avif') }}" alt="header-2">
             </li>
             <li>
-                <img src="{{ static_url('image/yuki_leona_woy_large.avif') }}">
+                <img src="{{ static_url('image/yuki_leona_woy_large.avif') }}" alt="header-3">
             </li>
         </ul>
     </div>
     {% module xsrf_form_html() %}
     <input type="hidden" value="{{login_flg}}" id="login-flg" />
-    <div class="row" id='content-area' class="flex">
+    <div class="row flex" id='content-area'>
         <!--        テンプレート展開-->
 
     </div>
@@ -235,7 +228,7 @@
                     <div class="balloon4 center-align">
                         <p id="loading-text">読込中...</p>
                     </div>
-                    <img class="center-align" class="responsive-img" src="{{ static_url('image/yuki_leona_woy_small.png') }}">
+                    <img class="center-align responsive-img" src="{{ static_url('image/yuki_leona_woy_small.png') }}" alt="woy">
 
                 </div>
             </div>
@@ -246,7 +239,7 @@
         <div class="balloon-right">
             <p>新しい歌を追加してね！</p>
         </div>
-        <img class="rotate-bottom" width="120px" src="{{ static_url('image/yuki_leona_new_song_small.png') }}">
+        <img class="rotate-bottom" width="120px" src="{{ static_url('image/yuki_leona_new_song_small.png') }}" alt="new-song">
     </div>
     <div id="new-content-modal" uk-modal>
         <div class="uk-modal-dialog uk-modal-body uk-light uk-background-secondary uk-padding">
