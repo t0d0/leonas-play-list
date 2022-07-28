@@ -6,9 +6,9 @@ from lpl_db.base_db import BaseDb
 
 class FavoriteDb(BaseDb):
 
-    def set_data(self, user='', favorite_id=''):
+    async def set_data(self, user='', favorite_id=''):
         insert_data = {'e-mail': user, 'favorites': []}
-        set_target = self.get_data(user)
+        set_target = await self.get_data(user)
         if set_target is None:
             #            新規作成
             insert_data['favorites'] = [favorite_id]
@@ -21,12 +21,13 @@ class FavoriteDb(BaseDb):
             self.fav_co.update_one({'e-mail': insert_data['e-mail']}, {'$set': insert_data})
         return insert_data
 
-    def remove_data(self, user='', favorite_id=''):
-        set_target = self.get_data(user)
+    async def remove_data(self, user='', favorite_id=''):
+        set_target = await self.get_data(user)
         set_target['favorites'].remove(favorite_id)
         self.fav_co.update_one({'e-mail': set_target['e-mail']}, {'$set': set_target})
 
     def get_data(self, user=''):
+        # print(user)
         return (
             self.fav_co.find_one({
                 "e-mail": user

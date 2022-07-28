@@ -14,8 +14,8 @@ class ContentDb(BaseDb):
         return self.lpl_co.insert_one(insert_data)
 
     #    更新
-    def update_data(self, update_data):
-        self.lpl_co.update_one({'_id': ObjectId(update_data['_id'])}, {'$set': {
+    async def update_data(self, update_data):
+        await self.lpl_co.update_one({'_id': ObjectId(update_data['_id'])}, {'$set': {
             "title": update_data["title"],
             "video_id": update_data["video_id"],
             "time": update_data["time"],

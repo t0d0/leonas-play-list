@@ -6,7 +6,7 @@ from lpl_util import util
 
 
 class LPLEditHandler(tornado.web.RequestHandler):
-    def post(self):
+    async def post(self):
         print('edit')
         update_data = {
             "_id": self.get_argument('target'),
@@ -16,7 +16,7 @@ class LPLEditHandler(tornado.web.RequestHandler):
             "time": util.convert_time(self.get_argument('time'))
         }
 
-        self.application.content_dba.update_data(update_data)
+        await self.application.content_dba.update_data(update_data)
 
         #        data = list(content_dba.get_data())
         #        self.redirect("/leonas_play_list")

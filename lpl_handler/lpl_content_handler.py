@@ -31,13 +31,11 @@ class LPLContentHandler(tornado.web.RequestHandler):
         login_flg = False
 
         user = self.get_secure_cookie("user")
-
-        favorited_list = await self.application.favorite_dba.get_data(user)
         if user:
             print('ログイン済みユーザ')
             login_flg = True
-            user = self.get_secure_cookie("user").decode('utf-8')
-            # favorited_list = await self.application.favorite_dba.get_data(user)
+            user = user.decode('utf-8')
+            favorited_list = await self.application.favorite_dba.get_data(user)
             if favorited_list is not None:
                 favorited_list = favorited_list['favorites']
             else:
