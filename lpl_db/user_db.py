@@ -1,24 +1,16 @@
 # coding:utf-8
+from lpl_db.base_db import BaseDb
 
-import pymongo
 
-
-# from functools import singledispatch
-# from datetime import datetime
-
-class UserDb:
-    def __init__(self):
-        self.client = pymongo.MongoClient('localhost', 27017)
-        self.db = self.client.lpl_db
-        self.co = self.db.user_collection
-
+class UserDb(BaseDb):
+    
     def set_data(self, data):
         insert_data = {'e-mail': data['e-mail'], '_id': data['e-mail'], 'password': data['password']}
-        return self.co.insert_one(insert_data)
+        return self.user_co.insert_one(insert_data)
 
     def get_data(self, user='', password=''):
         return (
-            self.co.find_one({
+            self.user_co.find_one({
                 "_id": user,
                 "password": password
             })
@@ -26,7 +18,7 @@ class UserDb:
 
     def get_data_by_id(self, target_id):
         return (
-            self.co.aggregate(
+            self.user_co.aggregate(
                 [
                     {
                         '$match': {
@@ -38,4 +30,4 @@ class UserDb:
         )
 
     def erase_data(self, target_id):
-        self.co.delete_one({'_id': target_id})
+        self.user_co.delete_one({'_id': target_id})

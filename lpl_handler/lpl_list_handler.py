@@ -4,10 +4,10 @@ from lpl_util import util
 
 
 class LPLListHandler(tornado.web.RequestHandler):
-    def get(self):
+    async def get(self):
         print('list_get')
-        title_list = list(self.application.content_dba.get_title_list())
-        artist_list = list(self.application.content_dba.get_artist_list())
+        title_list = list(await self.application.content_dba.get_title_list())
+        artist_list = list(await self.application.content_dba.get_artist_list())
 
         title_list = util.sort_dict_list(title_list, 'title')
         artist_list = util.sort_dict_list(artist_list, 'artist')

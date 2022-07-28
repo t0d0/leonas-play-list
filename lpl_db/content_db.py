@@ -1,28 +1,21 @@
 # coding:utf-8
 
-import pymongo
 from bson.objectid import ObjectId
 
-
-# from functools import singledispatch
-# from datetime import datetime
 from lpl_const import constants
+from lpl_db.base_db import BaseDb
 
 
-class ContentDb:
-    def __init__(self):
-        self.client = pymongo.MongoClient('localhost', 27017)
-        self.db = self.client.lpl_db
-        self.co = self.db.lpl_collection
+class ContentDb(BaseDb):
 
     #   挿入
     def set_data(self, data):
         insert_data = {'title': data['title'], 'video_id': data['video_id'], 'time': data['time'], 'artist': ''}
-        return self.co.insert_one(insert_data)
+        return self.lpl_co.insert_one(insert_data)
 
     #    更新
     def update_data(self, update_data):
-        self.co.update_one({'_id': ObjectId(update_data['_id'])}, {'$set': {
+        self.lpl_co.update_one({'_id': ObjectId(update_data['_id'])}, {'$set': {
             "title": update_data["title"],
             "video_id": update_data["video_id"],
             "time": update_data["time"],
@@ -37,7 +30,7 @@ class ContentDb:
             options = ''
         if without_target is None:
             return (
-                self.co.aggregate(
+                self.lpl_co.aggregate(
                     [
                         {
                             '$match': {
@@ -51,13 +44,13 @@ class ContentDb:
                         {'$limit': 20}
                     ]
                 )
-            )
+            ).to_list(None)
 
         without_object_id_list = []
         for target in without_target:
             without_object_id_list.append(ObjectId(target))
         return (
-            self.co.aggregate(
+            self.lpl_co.aggregate(
                 [
                     {
                         '$match': {
@@ -73,7 +66,7 @@ class ContentDb:
                     {'$limit': 20}
                 ]
             )
-        )
+        ).to_list(None)
 
     def get_data_by_artist(self, artist, without_target=None):
         if without_target is None:
@@ -82,7 +75,7 @@ class ContentDb:
         options = ''
         if without_target is None:
             return (
-                self.co.aggregate(
+                self.lpl_co.aggregate(
                     [
                         {
                             '$match': {
@@ -96,13 +89,13 @@ class ContentDb:
                         {'$limit': 20}
                     ]
                 )
-            )
+            ).to_list(None)
 
         without_object_id_list = []
         for target in without_target:
             without_object_id_list.append(ObjectId(target))
         return (
-            self.co.aggregate(
+            self.lpl_co.aggregate(
                 [
                     {
                         '$match': {
@@ -118,7 +111,7 @@ class ContentDb:
                     {'$limit': 20}
                 ]
             )
-        )
+        ).to_list(None)
 
     def get_data_by_ids(self, target_ids=None, without_target=None):
         if without_target is None:
@@ -146,11 +139,11 @@ class ContentDb:
             '$sample': {'size': 20}
         }]
 
-        return self.co.aggregate(query)
+        return self.lpl_co.aggregate(query).to_list(None)
 
     def get_data_by_id(self, target_id):
         return (
-            self.co.aggregate(
+            self.lpl_co.aggregate(
                 [
                     {
                         '$match': {
@@ -162,26 +155,26 @@ class ContentDb:
         )
 
     def get_title_list(self):
-        return self.co.aggregate([{"$group": {"_id": "$title",
+        return self.lpl_co.aggregate([{"$group": {"_id": "$title",
                                               "title": {"$first": '$title'},
                                               "artist": {"$first": '$artist'},
                                               "count": {"$sum": 1}
                                               }
                                    }
 
-                                  ])
+                                  ]).to_list(None)
 
     def get_artist_list(self):
-        return self.co.aggregate([{"$group": {"_id": "$artist",
+        return self.lpl_co.aggregate([{"$group": {"_id": "$artist",
                                               "artist": {"$first": '$artist'},
                                               "count": {"$sum": 1}
                                               }
                                    }
 
-                                  ])
+                                  ]).to_list(None)
 
     def erase_data(self, target_id):
-        self.co.delete_one({'_id': ObjectId(target_id)})
+        self.lpl_co.delete_one({'_id': ObjectId(target_id)})
 
     def increment_good(self, target_id):
-        self.co.update({'_id': ObjectId(target_id)}, {'$inc': {'good': 1}})
+        self.lpl_co.update({'_id': ObjectId(target_id)}, {'$inc': {'good': 1}})

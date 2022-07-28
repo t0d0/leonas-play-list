@@ -49,3 +49,13 @@ def is_favorited_content(input_id, favorited_list):
         return True
     else:
         return False
+
+
+async def convert_aggregate_obj_to_list(cursor):
+    print("convert_aggregate_obj_to_list")
+    result_list = []
+    async for result in cursor:
+        print("convert")
+        result_list.append(result)
+
+    return result_list

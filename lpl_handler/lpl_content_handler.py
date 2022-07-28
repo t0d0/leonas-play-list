@@ -9,7 +9,7 @@ class LPLContentHandler(tornado.web.RequestHandler):
     def get(self, *args, **kwargs):
         self.write('test')
 
-    def post(self, *args, **kwargs):
+    async def post(self, *args, **kwargs):
         search_word = self.get_argument('search', '')
 
         #        完全一致
@@ -32,11 +32,12 @@ class LPLContentHandler(tornado.web.RequestHandler):
 
         user = self.get_secure_cookie("user")
 
+        favorited_list = await self.application.favorite_dba.get_data(user)
         if user:
             print('ログイン済みユーザ')
             login_flg = True
             user = self.get_secure_cookie("user").decode('utf-8')
-            favorited_list = self.application.favorite_dba.get_data(user)
+            # favorited_list = await self.application.favorite_dba.get_data(user)
             if favorited_list is not None:
                 favorited_list = favorited_list['favorites']
             else:
@@ -45,30 +46,33 @@ class LPLContentHandler(tornado.web.RequestHandler):
             print('ログインしてないユーザ')
             favorited_list = json.loads(self.get_argument('local-favorite'))
             #            pprint.pprint(favorited_list)
-            if self.application.favorite_dba.get_data(user) is not None:
-                favorited_list = self.application.favorite_dba.get_data(user)['favorites']
+
+            if favorited_list is not None:
+                print(favorited_list)
+                # favorited_list = favorited_list['favorites']
+
         print('artist')
         print(artist)
         if favorite_flg:
             if exist_id[0] == '':
                 exist_id = []
 
-            content_data_list = list(self.application.content_dba.get_data_by_ids(favorited_list, exist_id))
+            content_data_list = list(await self.application.content_dba.get_data_by_ids(favorited_list, exist_id))
 
         elif artist != '':
             if exist_id[0] == '':
                 exist_id = []
             if artist == 'unknown':
                 artist = ''
-            content_data_list = list(self.application.content_dba.get_data_by_artist(artist, exist_id))
-
+            content_data_list = await self.application.content_dba.get_data_by_artist(artist, exist_id)
+            content_data_list = list(content_data_list)
         else:
             if exist_id[0] == '':
-                exist_id = None
-
-            content_data_list = list(self.application.content_dba.get_data(search_word, exist_id, perfect))
+                exist_id = []
+            content_data_list = await self.application.content_dba.get_data(search_word, exist_id, perfect)
 
         for i, data in enumerate(content_data_list):
+            print(content_data_list[i])
             content_data_list[i]['_id'] = str(data['_id'])
 
             if login_flg and favorited_list is not None:

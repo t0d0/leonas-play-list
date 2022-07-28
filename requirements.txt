@@ -5,3 +5,4 @@ pycodestyle==2.8.0
 pyflakes==2.4.0
 pymongo==4.1.1
 tornado==6.2
+motor~=3.0.0
