@@ -5,6 +5,14 @@ import re
 
 
 def convert_time(input_time):
+    """':'で区切られた時間情報を秒に変換する。
+
+    Args:
+        input_time:'hh:mm:ss'形式で表現された時間の文字列。'mm:ss','ss'でも可
+
+    Returns:秒
+
+    """
     result_time = 0
     splited_time = re.split("[:：]", input_time)
     if len(splited_time) == 3:
@@ -24,19 +32,53 @@ def convert_time(input_time):
 
 
 def get_video_id(url):
+    """urlからvideo_idを取得する。
+
+    Args:
+        url:video_idを含むurl
+
+    Returns:video_id
+
+    """
     video_id = re.search(r"[/?=]([-\w]{11})", url).group().strip("=").strip("/")
     return video_id
 
 
 def split_vertical_bar(raw_string):
+    """'|'で区切られた文字列を分割する。
+
+    Args:
+        raw_string:'|'で区切られた文字列
+
+    Returns:分割されたlist
+
+    """
     return re.split(r"\|", raw_string)
 
 
 def sort_dict_list(dict_list, sort_key):
+    """与えられたキーでdictをソートする
+
+    Args:
+        dict_list: ソート対象のdict
+        sort_key:ソートするためのキー
+
+    Returns:
+
+    """
     return sorted(dict_list, key=lambda x: x[sort_key])
 
 
 def get_hashed_password(input_password, input_salt):
+    """パスワードをハッシュする。
+
+    Args:
+        input_password:ハッシュ前のパスワード
+        input_salt:ソルト
+
+    Returns:ハッシュ後のパスワード
+
+    """
     password = bytes(input_password, 'utf-8')
     salt = bytes(input_salt, 'utf-8')
     #    # ソルト(salt)を付け加えてからハッシュ化
@@ -45,17 +87,16 @@ def get_hashed_password(input_password, input_salt):
 
 
 def is_favorited_content(input_id, favorited_list):
+    """お気に入り登録済みのコンテンツかどうかを判別する。
+
+    Args:
+        input_id:判別対象のid
+        favorited_list:お気に入りのコンテンツのlist
+
+    Returns:お気に入りか否か
+
+    """
     if input_id in favorited_list:
         return True
     else:
         return False
-
-
-async def convert_aggregate_obj_to_list(cursor):
-    print("convert_aggregate_obj_to_list")
-    result_list = []
-    async for result in cursor:
-        print("convert")
-        result_list.append(result)
-
-    return result_list
