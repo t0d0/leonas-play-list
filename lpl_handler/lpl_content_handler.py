@@ -7,9 +7,21 @@ from lpl_util import util
 
 class LPLContentHandler(tornado.web.RequestHandler):
     def get(self, *args, **kwargs):
+        """
+
+        Args:
+            *args: フレームワークの規定
+            **kwargs: フレームワークの規定
+        """
         self.write('test')
 
     async def post(self, *args, **kwargs):
+        """
+
+        Args:
+            *args: フレームワークの規定
+            **kwargs: フレームワークの規定
+        """
         search_word = self.get_argument('search', '')
 
         #        完全一致
@@ -35,7 +47,7 @@ class LPLContentHandler(tornado.web.RequestHandler):
             print('ログイン済みユーザ')
             login_flg = True
             user = user.decode('utf-8')
-            favorited_list = await self.application.favorite_dba.get_data(user)
+            favorited_list = await self.application.favorite_db.get_data(user)
             if favorited_list is not None:
                 favorited_list = favorited_list['favorites']
             else:
@@ -55,19 +67,19 @@ class LPLContentHandler(tornado.web.RequestHandler):
             if exist_id[0] == '':
                 exist_id = []
 
-            content_data_list = list(await self.application.content_dba.get_data_by_ids(favorited_list, exist_id))
+            content_data_list = list(await self.application.content_db.get_data_by_ids(favorited_list, exist_id))
 
         elif artist != '':
             if exist_id[0] == '':
                 exist_id = []
             if artist == 'unknown':
                 artist = ''
-            content_data_list = await self.application.content_dba.get_data_by_artist(artist, exist_id)
+            content_data_list = await self.application.content_db.get_data_by_artist(artist, exist_id)
             content_data_list = list(content_data_list)
         else:
             if exist_id[0] == '':
                 exist_id = []
-            content_data_list = await self.application.content_dba.get_data(search_word, exist_id, perfect)
+            content_data_list = await self.application.content_db.get_data(search_word, exist_id, perfect)
 
         for i, data in enumerate(content_data_list):
             print(content_data_list[i])

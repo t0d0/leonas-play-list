@@ -1,10 +1,11 @@
-# coding:utf-8
-
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+"""各種Utilを定義"""
 import hashlib
 import re
 
 
-def convert_time(input_time):
+def convert_time(input_time: str):
     """':'で区切られた時間情報を秒に変換する。
 
     Args:
@@ -13,7 +14,7 @@ def convert_time(input_time):
     Returns:秒
 
     """
-    result_time = 0
+    result_time: int = 0
     splited_time = re.split("[:：]", input_time)
     if len(splited_time) == 3:
         result_time += int(splited_time[0]) * 3600
@@ -31,7 +32,7 @@ def convert_time(input_time):
         raise Exception
 
 
-def get_video_id(url):
+def get_video_id(url: str):
     """urlからvideo_idを取得する。
 
     Args:
@@ -40,36 +41,38 @@ def get_video_id(url):
     Returns:video_id
 
     """
-    video_id = re.search(r"[/?=]([-\w]{11})", url).group().strip("=").strip("/")
+    video_id: str = re.search(r"[/?=]([-\w]{11})", url).group().strip("=").strip("/")
     return video_id
 
 
-def split_vertical_bar(raw_string):
+def split_vertical_bar(raw_str: str):
     """'|'で区切られた文字列を分割する。
 
     Args:
-        raw_string:'|'で区切られた文字列
+        raw_str:'|'で区切られた文字列
 
     Returns:分割されたlist
 
     """
-    return re.split(r"\|", raw_string)
+    result: list[str] = re.split(r"\|", raw_str)
+    return result
 
 
-def sort_dict_list(dict_list, sort_key):
+def sort_dict_list(dict_list: list[dict], sort_key: str):
     """与えられたキーでdictをソートする
 
     Args:
         dict_list: ソート対象のdict
         sort_key:ソートするためのキー
 
-    Returns:
+    Returns:ソート後のdict
 
     """
-    return sorted(dict_list, key=lambda x: x[sort_key])
+    result: list[dict] = sorted(dict_list, key=lambda x: x[sort_key])
+    return result
 
 
-def get_hashed_password(input_password, input_salt):
+def get_hashed_password(input_password: str, input_salt: str):
     """パスワードをハッシュする。
 
     Args:
@@ -82,11 +85,11 @@ def get_hashed_password(input_password, input_salt):
     password = bytes(input_password, 'utf-8')
     salt = bytes(input_salt, 'utf-8')
     #    # ソルト(salt)を付け加えてからハッシュ化
-    digest = hashlib.pbkdf2_hmac('sha256', password, salt, 100000).hex()
+    digest: str = hashlib.pbkdf2_hmac('sha256', password, salt, 100000).hex()
     return digest
 
 
-def is_favorited_content(input_id, favorited_list):
+def is_favorited_content(input_id: str, favorited_list: list[str]):
     """お気に入り登録済みのコンテンツかどうかを判別する。
 
     Args:
@@ -96,7 +99,9 @@ def is_favorited_content(input_id, favorited_list):
     Returns:お気に入りか否か
 
     """
+    result: bool = False
     if input_id in favorited_list:
-        return True
-    else:
-        return False
+        result = True
+
+    return result
+

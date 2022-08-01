@@ -10,10 +10,10 @@ class LPLLoginHandler(tornado.web.RequestHandler):
         #        search_word = self.get_argument('search', '')
         self.render("login.html")
 
-    def post(self):
+    async def post(self):
         e_mail = self.get_argument('e-mail')
         password = util.get_hashed_password(self.get_argument('password'), self.application.salt)
-        user = self.application.user_dba.get_data(e_mail, password)
+        user = await self.application.user_db.get_data(e_mail, password)
         if user is not None:
             self.set_secure_cookie("user", e_mail)
             self.redirect("/")

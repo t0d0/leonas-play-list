@@ -16,13 +16,13 @@ sys.path.append('/')
 
 class LPLApplication(tornado.web.Application):
     def __init__(self, handlers, **settings):
-        self.content_dba = content_db.ContentDb()
-        self.user_dba = user_db.UserDb()
-        self.favorite_dba = favorite_db.FavoriteDb()
+        self.content_db = content_db.ContentDb()
+        self.user_db = user_db.UserDb()
+        self.favorite_db = favorite_db.FavoriteDb()
         self.salt = secret.salt
         tornado.web.Application.__init__(self, handlers, **settings)
 
-
+# TODO:ハンドラーへのルーティングを整理したい。
 application = LPLApplication([
     (r'/', lpl_handler.lpl_index_handler.LPLIndexHandler),
     (r'/?search', lpl_handler.lpl_index_handler.LPLIndexHandler),
