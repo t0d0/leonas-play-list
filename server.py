@@ -9,7 +9,7 @@ import sys
 
 import lpl_handler
 from lpl_db import user_db, content_db, favorite_db
-from lpl_const import config,  secret
+from lpl_const import config, secret
 
 sys.path.append('/')
 
@@ -21,6 +21,7 @@ class LPLApplication(tornado.web.Application):
         self.favorite_db = favorite_db.FavoriteDb()
         self.salt = secret.salt
         tornado.web.Application.__init__(self, handlers, **settings)
+
 
 # TODO:ハンドラーへのルーティングを整理したい。
 application = LPLApplication([
@@ -35,7 +36,6 @@ application = LPLApplication([
     (r'/favorite.*', lpl_handler.lpl_favorite_handler.LPLFavoriteHandler),
     (r'/unfavorite.*', lpl_handler.lpl_unfavorite_handler.LPLUnFavoriteHandler),
     (r'/delete.*', lpl_handler.lpl_delete_handler.LPLDeleteHandler),
-    (r'/edit.*', lpl_handler.lpl_edit_handler.LPLEditHandler),
     (r'/good.*', lpl_handler.lpl_good_handler.LPLGoodHandler),
     (r'/content.*', lpl_handler.lpl_content_handler.LPLContentHandler),
     (r'/null', lpl_handler.lpl_index_handler.LPLIndexHandler),

@@ -31,7 +31,7 @@ function getCookie(name) {
 function postNewContent() {
     var newContentform = document.getElementById('new-content-form');
     $.ajax({
-            url: '/',
+            url: '/content',
             dataType: 'json',
             type: 'POST',
             data: {
@@ -77,9 +77,9 @@ function postEditContent() {
     var editform = document.getElementById('edit-form');
     //    event.preventDefault();
     $.ajax({
-            url: 'edit',
+            url: '/content',
             dataType: 'json',
-            type: 'POST',
+            type: 'PUT',
             data: {
                 'target': editform.target.value,
                 'title': editform.title.value,
@@ -265,7 +265,7 @@ function getNextContent() {
         $.ajax({
                 url: 'content',
                 dataType: 'json',
-                type: 'POST',
+                type: 'SEARCH',
                 data: {
                     '_xsrf': getCookie("_xsrf"),
                     'exist': existContentIdList.join(','),

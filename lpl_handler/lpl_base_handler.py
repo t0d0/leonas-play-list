@@ -3,5 +3,5 @@ import tornado
 
 
 class LPLIndexBaseHandler(tornado.web.RequestHandler):
-    def __init__(self):
-        tornado.web.RequestHantornado.web.RequestHandlerdler__init__(self)
+    SUPPORTED_METHODS = tornado.web.RequestHandler.SUPPORTED_METHODS + ('SEARCH',)
+

@@ -2,25 +2,17 @@ import json
 
 import tornado
 
+from lpl_handler.lpl_base_handler import LPLIndexBaseHandler
 from lpl_util import util
 
 
-class LPLContentHandler(tornado.web.RequestHandler):
-    def get(self, *args, **kwargs):
-        """
-
-        Args:
-            *args: フレームワークの規定
-            **kwargs: フレームワークの規定
-        """
-        self.write('test')
-
-    async def post(self, *args, **kwargs):
-        """
-
-        Args:
-            *args: フレームワークの規定
-            **kwargs: フレームワークの規定
+class LPLContentHandler(LPLIndexBaseHandler):
+    async def search(self) -> None:
+        """SEARCHメソッド
+        コンテンツの検索処理を行う。
+        POSTでコンテンツ取得を行うのは直感的ではないが、クエリパラメータの長大化が懸念されるため、
+        SEARCHメソッドを定義しています。
+        TODO:でかすぎる。どうにかしたい。
         """
         search_word = self.get_argument('search', '')
 
@@ -92,3 +84,50 @@ class LPLContentHandler(tornado.web.RequestHandler):
                     content_data_list[i]['isFavorite'] = False
 
         self.write(json.dumps(content_data_list))
+
+    async def post(self) -> None:
+        """POSTメソッド
+        コンテンツの新規投稿を行う。
+
+        """
+        titles = util.split_vertical_bar(self.get_argument('title'))
+        times = util.split_vertical_bar(self.get_argument('time'))
+        content_db = self.application.content_db
+        inserted_ids = []
+        for (title, time) in zip(titles, times):
+            data = content_db.DataFormat(title=title,
+                                         video_id=util.get_video_id(self.get_argument('url')),
+                                         time=util.convert_time(time))
+            insert_result = await content_db.set_data(data)
+            inserted_ids.append(str(insert_result.inserted_id))
+
+        content_data_list = []
+        for inserted_id in inserted_ids:
+            content_data_list.extend(list(content_db.get_data_by_id(inserted_id)))
+        print(content_data_list)
+        for data in content_data_list:
+            data['_id'] = str(data['_id'])
+
+        self.write(json.dumps(content_data_list))
+
+    async def put(self) -> None:
+        """PUTメソッド
+        コンテンツの更新を行う。
+
+        """
+        print('edit')
+        content_db = self.application.content_db
+        update_data = content_db.DataFormat(_id=self.get_argument('target'),
+                                            title=self.get_argument('title'),
+                                            artist=self.get_argument('artist'),
+                                            video_id=util.get_video_id(self.get_argument('url')),
+                                            time=util.convert_time(self.get_argument('time')))
+
+        update_result = await content_db.update_data(update_data)
+        for i, data in enumerate(update_result):
+            print(update_result[i])
+            update_result[i]['_id'] = str(data['_id'])
+
+        print(update_result)
+        print(type(update_result))
+        self.write(json.dumps(update_result[0]))
