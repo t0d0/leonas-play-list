@@ -73,18 +73,9 @@ class UserDb(BaseDb):
         })
         return result
 
-    def get_data_by_id(self, target_id):
-        return (
-            self.user_co.aggregate(
-                [
-                    {
-                        '$match': {
-                            '_id': target_id
-                        }
-                    }
-                ]
-            )
-        )
+    async def get_data_by_id(self, target_id):
+        result = await self.user_co.aggregate([{'$match': {'_id': target_id}}])
+        return result
 
     def erase_data(self, target_id):
         self.user_co.delete_one({'_id': target_id})

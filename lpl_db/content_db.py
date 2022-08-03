@@ -70,98 +70,65 @@ class ContentDb(BaseDb):
         result = await self.get_data_by_id(update_data["_id"])
         return list(result)
 
-    def get_data(self, search: str = "", without_target: list[str] = None, perfect: bool = False):
+    async def get_data(self, search: str = "", without_target: list[str] = None, perfect: bool = False):
         regex = constants.regex_keyword_any + search + constants.regex_keyword_any
         options = "i"
         if perfect:
             regex = "^" + search + "$"
             options = ""
         if without_target is None:
-            return (
-                self.lpl_co.aggregate(
-                    [
-                        {
-                            "$match": {
-                                "title": {
-                                    "$regex": regex,
-                                    "$options": options
-                                }
-                            }
-                        },
-                        {"$sample": {"size": 20}},
-                        {"$limit": 20}
-                    ]
-                )
-            ).to_list(None)
+            detail_query = {"title": {
+                "$regex": regex,
+                "$options": options
+            }}
+        else:
+            without_object_id_list = []
+            for target in without_target:
+                without_object_id_list.append(ObjectId(target))
+            detail_query = {
+                "$and": [
+                    {"_id": {"$nin": without_object_id_list}},
+                    {"title": {
+                        "$regex": regex,
+                        "$options": options
+                    }}]}
 
-        without_object_id_list = []
-        for target in without_target:
-            without_object_id_list.append(ObjectId(target))
-        return (
-            self.lpl_co.aggregate(
-                [
-                    {
-                        "$match": {
-                            "$and": [
-                                {"_id": {"$nin": without_object_id_list}},
-                                {"title": {
-                                    "$regex": regex,
-                                    "$options": options}}
-                            ]
-                        },
-                    },
-                    {"$sample": {"size": 20}},
-                    {"$limit": 20}
-                ]
-            )
-        ).to_list(None)
+        query = self.__build_get_content_query(detail_query)
+        self.lpl_co.aggregate(query)
 
-    def get_data_by_artist(self, artist, without_target=None):
-        if without_target is None:
-            without_target = []
+        query_result = self.lpl_co.aggregate(query)
+        result = await self.__result_to_model_list(query_result)
+        return result
+
+    async def get_data_by_artist(self, artist, without_target=None):
         regex = "^" + artist + "$"
         options = ""
         if without_target is None:
-            return (
-                self.lpl_co.aggregate(
-                    [
-                        {
-                            "$match": {
-                                "artist": {
-                                    "$regex": regex,
-                                    "$options": options
-                                }
-                            }
-                        },
-                        {"$sample": {"size": 20}},
-                        {"$limit": 20}
-                    ]
-                )
-            ).to_list(None)
+            detail_query = {
+                "artist": {
+                    "$regex": regex,
+                    "$options": options
+                }}
+        else:
+            without_target = []
+            without_object_id_list = []
+            for target in without_target:
+                without_object_id_list.append(ObjectId(target))
+            detail_query = {
+                "$and": [
+                    {"_id": {"$nin": without_object_id_list}},
+                    {"artist": {
+                        "$regex": regex,
+                        "$options": options
+                    }}]}
 
-        without_object_id_list = []
-        for target in without_target:
-            without_object_id_list.append(ObjectId(target))
-        return (
-            self.lpl_co.aggregate(
-                [
-                    {
-                        "$match": {
-                            "$and": [
-                                {"_id": {"$nin": without_object_id_list}},
-                                {"artist": {
-                                    "$regex": regex,
-                                    "$options": options}}
-                            ]
-                        },
-                    },
-                    {"$sample": {"size": 20}},
-                    {"$limit": 20}
-                ]
-            )
-        ).to_list(None)
+        query = self.__build_get_content_query(detail_query)
 
-    def get_data_by_ids(self, target_ids=None, without_target=None):
+        query_result = self.lpl_co.aggregate(query)
+        result = await self.__result_to_model_list(query_result)
+        return result
+
+    async def get_data_by_ids(self, target_ids=None, without_target=None):
         if without_target is None:
             without_target = []
         if target_ids is None:
@@ -173,32 +140,24 @@ class ContentDb(BaseDb):
         for target in target_ids:
             target_object_id_list.append(ObjectId(target))
 
-        query = [{
-            "$match": {
-                "$and": [
-                    {
-                        "_id": {"$nin": without_object_id_list},
-                    }, {
-                        "_id": {"$in": target_object_id_list}
-                    },
-                ]
-            }
-        }, {
-            "$sample": {"size": 20}
-        }]
+        detail_query = {
+            "$and": [
+                {"_id": {"$nin": without_object_id_list}},
+                {"_id": {"$in": target_object_id_list}}
+            ]}
 
-        return self.lpl_co.aggregate(query).to_list(None)
+        query = self.__build_get_content_query(detail_query)
+        query_result = self.lpl_co.aggregate(query)
+        result = await self.__result_to_model_list(query_result)
+        return result
 
-    def get_data_by_id(self, target_id):
-        result = self.lpl_co.aggregate(
-            [
-                {
-                    "$match": {
-                        "_id": ObjectId(target_id)
-                    }
-                }
-            ]
-        ).to_list(None)
+    async def get_data_by_id(self, target_id):
+
+        detail_query = {"_id": ObjectId(target_id)}
+
+        query = self.__build_get_content_query(detail_query)
+        query_result = self.lpl_co.aggregate(query)
+        result = await self.__result_to_model_list(query_result)
         return result
 
     def get_title_list(self):
@@ -225,3 +184,19 @@ class ContentDb(BaseDb):
 
     def increment_good(self, target_id):
         self.lpl_co.update({"_id": ObjectId(target_id)}, {"$inc": {"good": 1}})
+
+    async def __build_get_content_query(self, detail_query):
+        query = [
+            {"$match": detail_query},
+            {"$sample": {"size": 20}},
+            {"$limit": 20}
+        ]
+        return query
+
+    async def __result_to_model_list(self, result):
+        model_list = []
+        async for data in result:
+            model = self.DataFormat(data["title"], data["video_id"], data["time"], data["artist"], str(data["_id"]))
+            model_list.append(model)
+
+        return model_list
