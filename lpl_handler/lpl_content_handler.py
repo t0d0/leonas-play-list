@@ -72,11 +72,9 @@ class LPLContentHandler(LPLIndexBaseHandler):
             if exist_id[0] == '':
                 exist_id = []
             content_data_list = await self.application.content_db.get_data(search_word, exist_id, perfect)
+        print(content_data_list),
 
         for i, data in enumerate(content_data_list):
-            print(content_data_list[i])
-            content_data_list[i]['_id'] = str(data['_id'])
-
             if login_flg and favorited_list is not None:
                 if util.is_favorited_content(content_data_list[i]['_id'], favorited_list):
                     content_data_list[i]['isFavorite'] = True

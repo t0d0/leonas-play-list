@@ -38,7 +38,7 @@ class ContentDb(BaseDb):
             self._id = _id
 
         def __getitem__(self, key):
-            return self.__getattribute__(key)
+            return self.__getattribute__(str(key))
 
     async def set_data(self, data: DataFormat):
         """新規コンテンツの挿入
@@ -76,11 +76,19 @@ class ContentDb(BaseDb):
         if perfect:
             regex = "^" + search + "$"
             options = ""
+
         if without_target is None:
-            detail_query = {"title": {
-                "$regex": regex,
-                "$options": options
-            }}
+            detail_query = {
+                "$or": [
+                    {"title": {
+                        "$regex": regex,
+                        "$options": options
+                    }},
+                    {"artist": {
+                        "$regex": regex,
+                        "$options": options
+                    }}
+                ]}
         else:
             without_object_id_list = []
             for target in without_target:
@@ -88,14 +96,19 @@ class ContentDb(BaseDb):
             detail_query = {
                 "$and": [
                     {"_id": {"$nin": without_object_id_list}},
-                    {"title": {
-                        "$regex": regex,
-                        "$options": options
-                    }}]}
+                    {"$or": [
+                        {"title": {
+                            "$regex": regex,
+                            "$options": options
+                        }},
+                        {"artist": {
+                            "$regex": regex,
+                            "$options": options
+                        }}
+                    ]}]}
 
         query = self.__build_get_content_query(detail_query)
-        self.lpl_co.aggregate(query)
-
+        print(type(query))
         query_result = self.lpl_co.aggregate(query)
         result = await self.__result_to_model_list(query_result)
         return result
@@ -185,7 +198,7 @@ class ContentDb(BaseDb):
     def increment_good(self, target_id):
         self.lpl_co.update({"_id": ObjectId(target_id)}, {"$inc": {"good": 1}})
 
-    async def __build_get_content_query(self, detail_query):
+    def __build_get_content_query(self, detail_query):
         query = [
             {"$match": detail_query},
             {"$sample": {"size": 20}},
@@ -197,6 +210,6 @@ class ContentDb(BaseDb):
         model_list = []
         async for data in result:
             model = self.DataFormat(data["title"], data["video_id"], data["time"], data["artist"], str(data["_id"]))
-            model_list.append(model)
+            model_list.append(model.__dict__)
 
         return model_list
