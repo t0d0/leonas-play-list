@@ -5,6 +5,31 @@ from lpl_db.base_db import BaseDb
 
 
 class FavoriteDb(BaseDb):
+    class UpdateFavoriteDataFormat(BaseDb.DataFormat):
+        """
+        データ更新用のフォーマット用クラス
+        """
+        user: str
+        """ユーザーID"""
+        favorite_id: str
+        """コンテンツID"""
+
+        def __init__(self, user: str = "", favorite_id: str = ""):
+            self.user = user
+            self.favorite_id = favorite_id
+
+    class FindFavoriteDataFormat(BaseDb.DataFormat):
+        """
+        データ取得用のフォーマット用クラス
+        """
+        user: str
+        """ユーザーID"""
+        favorites: str
+        """コンテンツIDの"""
+
+        def __init__(self, user: str = "", favorites: list[str] = []):
+            self.user = user
+            self.favorites = favorites
 
     async def set_data(self, user='', favorite_id=''):
         insert_data = {'e-mail': user, 'favorites': []}

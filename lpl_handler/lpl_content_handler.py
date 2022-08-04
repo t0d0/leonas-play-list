@@ -93,9 +93,9 @@ class LPLContentHandler(LPLIndexBaseHandler):
         content_db = self.application.content_db
         inserted_ids = []
         for (title, time) in zip(titles, times):
-            data = content_db.DataFormat(title=title,
-                                         video_id=util.get_video_id(self.get_argument('url')),
-                                         time=util.convert_time(time))
+            data = content_db.ContentDataFormat(title=title,
+                                                video_id=util.get_video_id(self.get_argument('url')),
+                                                time=util.convert_time(time))
             insert_result = await content_db.set_data(data)
             inserted_ids.append(str(insert_result.inserted_id))
 
@@ -115,11 +115,11 @@ class LPLContentHandler(LPLIndexBaseHandler):
         """
         print('edit')
         content_db = self.application.content_db
-        update_data = content_db.DataFormat(_id=self.get_argument('target'),
-                                            title=self.get_argument('title'),
-                                            artist=self.get_argument('artist'),
-                                            video_id=util.get_video_id(self.get_argument('url')),
-                                            time=util.convert_time(self.get_argument('time')))
+        update_data = content_db.ContentDataFormat(_id=self.get_argument('target'),
+                                                   title=self.get_argument('title'),
+                                                   artist=self.get_argument('artist'),
+                                                   video_id=util.get_video_id(self.get_argument('url')),
+                                                   time=util.convert_time(self.get_argument('time')))
 
         update_result = await content_db.update_data(update_data)
         for i, data in enumerate(update_result):

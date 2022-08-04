@@ -3,7 +3,6 @@
 """コンテンツDBへのアクセス用"""
 from typing import Any
 
-import pymongo
 from bson.objectid import ObjectId
 
 from lpl_const import constants
@@ -15,9 +14,9 @@ class ContentDb(BaseDb):
     コンテンツDB操作用クラス
     """
 
-    class DataFormat:
+    class ContentDataFormat(BaseDb.DataFormat):
         """
-        データ更新用のフォーマット用クラス
+        コンテンツデータ取得/更新用のフォーマット用クラス
         """
         title: str
         """曲名"""
@@ -37,10 +36,7 @@ class ContentDb(BaseDb):
             self.artist = artist
             self._id = _id
 
-        def __getitem__(self, key):
-            return self.__getattribute__(str(key))
-
-    async def set_data(self, data: DataFormat):
+    async def set_data(self, data: ContentDataFormat):
         """新規コンテンツの挿入
 
         Args:
@@ -50,7 +46,7 @@ class ContentDb(BaseDb):
             挿入結果
 
         Examples:
-            content_db.set_data({"title":"hoge","video_id":"xxxxx","time":999})
+            content_db.set_data({"title":"song_title","video_id":"xxxxx","time":999})
 
         """
         insert_data = {"title": data["title"], "video_id": data["video_id"], "time": data["time"], "artist": ""}
@@ -58,7 +54,7 @@ class ContentDb(BaseDb):
         return result
 
     #    更新
-    async def update_data(self, update_data: DataFormat) -> dict[str, Any]:
+    async def update_data(self, update_data: ContentDataFormat) -> dict[str, Any]:
         await self.lpl_co.update_one({
             "_id": ObjectId(update_data["_id"])},
             {"$set": {
@@ -209,7 +205,8 @@ class ContentDb(BaseDb):
     async def __result_to_model_list(self, result):
         model_list = []
         async for data in result:
-            model = self.DataFormat(data["title"], data["video_id"], data["time"], data["artist"], str(data["_id"]))
+            model = self.ContentDataFormat(data["title"], data["video_id"], data["time"], data["artist"],
+                                           str(data["_id"]))
             model_list.append(model.__dict__)
 
         return model_list

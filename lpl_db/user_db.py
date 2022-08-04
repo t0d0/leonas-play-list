@@ -12,9 +12,9 @@ class UserDb(BaseDb):
     ユーザDB操作用クラス
     '''
 
-    class DataFormat:
+    class DataFormat(BaseDb.DataFormat):
         '''
-        データ更新用のフォーマット用クラス
+        ユーザーデータ更新/取得用のフォーマット用クラス
         '''
         e_mail: str
         '''メールアドレス'''
@@ -34,9 +34,6 @@ class UserDb(BaseDb):
             self.e_mail = e_mail
             self.password = password
             self._id = _id
-
-        def __getitem__(self, key):
-            return self.__getattribute__(key)
 
     async def set_data(self, data: DataFormat) -> Optional[pymongo.results.InsertOneResult]:
         """新規ユーザの挿入
