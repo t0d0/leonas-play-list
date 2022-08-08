@@ -265,7 +265,7 @@ function getNextContent() {
         $.ajax({
                 url: 'content',
                 dataType: 'json',
-                type: 'SEARCH',
+                type: 'QUERY',
                 data: {
                     '_xsrf': getCookie("_xsrf"),
                     'exist': existContentIdList.join(','),

@@ -7,11 +7,11 @@ from lpl_util import util
 
 
 class LPLContentHandler(LPLIndexBaseHandler):
-    async def search(self) -> None:
-        """SEARCHメソッド
+    async def query(self) -> None:
+        """QUERYメソッド
         コンテンツの検索処理を行う。
         POSTでコンテンツ取得を行うのは直感的ではないが、クエリパラメータの長大化が懸念されるため、
-        SEARCHメソッドを定義しています。
+        QUERYメソッドを定義しています。
         TODO:でかすぎる。どうにかしたい。
         """
         search_word = self.get_argument('search', '')
