@@ -54,9 +54,9 @@ function postNewContent() {
 function postDeleteContent() {
     var deleteContentform = document.getElementById('delete-content-form');
     $.ajax({
-            url: 'delete',
+            url: 'content',
             dataType: 'json',
-            type: 'POST',
+            type: 'DELETE',
             data: {
                 'target': deleteContentform.target.value,
                 '_xsrf': getCookie("_xsrf")

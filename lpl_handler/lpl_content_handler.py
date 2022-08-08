@@ -129,3 +129,11 @@ class LPLContentHandler(LPLIndexBaseHandler):
         print(update_result)
         print(type(update_result))
         self.write(json.dumps(update_result[0]))
+
+    def delete(self):
+        print('delete')
+        target_id = self.get_argument('target')
+        self.application.content_db.erase_data(target_id)
+        #        data = list(content_db.get_data())
+        #        self.redirect("/leonas_play_list")
+        self.write(json.dumps({"result": "complete"}))
