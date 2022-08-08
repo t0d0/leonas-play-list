@@ -54,7 +54,7 @@ function postNewContent() {
 function postDeleteContent() {
     var deleteContentform = document.getElementById('delete-content-form');
     $.ajax({
-            url: 'content',
+            url: 'api/content',
             dataType: 'json',
             type: 'DELETE',
             data: {
@@ -121,7 +121,7 @@ function sendGood(id) {
 
 function sendFavorite(id) {
     $.ajax({
-            url: 'favorite',
+            url: 'api/favorite',
             dataType: 'html',
             type: 'POST',
             data: {
@@ -142,7 +142,7 @@ function sendFavorite(id) {
 
 function sendUnFavorite(id) {
     $.ajax({
-            url: 'favorite',
+            url: 'api/favorite',
             dataType: 'html',
             type: 'DELETE',
             data: {
@@ -263,7 +263,7 @@ function getNextContent() {
                     'local-favorite': JSON.stringify(getAllLocalStrageFavorites()),
                 });
         $.ajax({
-                url: 'content',
+                url: 'api/content',
                 dataType: 'json',
                 type: 'QUERY',
                 data: {

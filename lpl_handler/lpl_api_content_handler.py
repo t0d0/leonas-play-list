@@ -6,7 +6,7 @@ from lpl_handler.lpl_base_handler import LPLIndexBaseHandler
 from lpl_util import util
 
 
-class LPLContentHandler(LPLIndexBaseHandler):
+class LPLAPIContentHandler(LPLIndexBaseHandler):
     async def query(self) -> None:
         """QUERYメソッド
         コンテンツの検索処理を行う。

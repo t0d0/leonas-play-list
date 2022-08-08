@@ -1,7 +1,7 @@
 import tornado
 
 
-class LPLFavoriteHandler(tornado.web.RequestHandler):
+class LPLAPIFavoriteHandler(tornado.web.RequestHandler):
     async def post(self):
         print('favorite')
         user = self.get_secure_cookie("user").decode('utf-8')
