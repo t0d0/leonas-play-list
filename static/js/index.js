@@ -142,9 +142,9 @@ function sendFavorite(id) {
 
 function sendUnFavorite(id) {
     $.ajax({
-            url: 'unfavorite',
+            url: 'favorite',
             dataType: 'html',
-            type: 'POST',
+            type: 'DELETE',
             data: {
                 'target': id,
                 '_xsrf': getCookie("_xsrf"),

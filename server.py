@@ -34,7 +34,6 @@ application = LPLApplication([
     (r'/password-forgot.*', lpl_handler.lpl_password_forgot_handler.LPLPasswordForgotHandler),
     (r'/password-update.*', lpl_handler.lpl_password_update_handler.LPLPasswordUpdateHandler),
     (r'/favorite.*', lpl_handler.lpl_favorite_handler.LPLFavoriteHandler),
-    (r'/unfavorite.*', lpl_handler.lpl_unfavorite_handler.LPLUnFavoriteHandler),
     (r'/delete.*', lpl_handler.lpl_delete_handler.LPLDeleteHandler),
     (r'/good.*', lpl_handler.lpl_good_handler.LPLGoodHandler),
     (r'/content.*', lpl_handler.lpl_content_handler.LPLContentHandler),
