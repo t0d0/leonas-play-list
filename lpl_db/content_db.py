@@ -67,10 +67,10 @@ class ContentDb(BaseDb):
         return list(result)
 
     async def get_data(self, search: str = "", without_target: list[str] = None, perfect: bool = False):
-        regex = constants.regex_keyword_any + search + constants.regex_keyword_any
+        regex = constants.regex_keyword_any + '\Q' + search + '\E' + constants.regex_keyword_any
         options = "i"
         if perfect:
-            regex = "^" + search + "$"
+            regex = "^" + '\Q' + search + '\E' + "$"
             options = ""
 
         if without_target is None:
@@ -110,7 +110,7 @@ class ContentDb(BaseDb):
         return result
 
     async def get_data_by_artist(self, artist, without_target=None):
-        regex = "^" + artist + "$"
+        regex = "^\Q" + artist + "\E$"
         options = ""
         if without_target is None:
             detail_query = {

@@ -18,6 +18,7 @@ class LPLAPIContentHandler(LPLAPIBaseHandler):
         TODO:でかすぎる。どうにかしたい。
         """
         search_word = self.get_argument('search', '')
+        print(search_word)
         #        完全一致
         perfect = self.get_argument('perfect', '')
         exist_id = self.get_argument('exist', '')

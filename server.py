@@ -8,7 +8,6 @@ import tornado.web
 import sys
 
 from tornado.netutil import bind_sockets
-from tornado.tcpserver import TCPServer
 
 import lpl_handler
 from lpl_db import user_db, content_db, favorite_db
