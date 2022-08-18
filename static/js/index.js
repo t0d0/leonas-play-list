@@ -72,26 +72,6 @@ function postNewContent() {
     });
 }
 
-//     $.ajax({
-//             url: '/content',
-//             dataType: 'json',
-//             type: 'POST',
-//             data: {
-//                 'title': newContentform.title.value,
-//                 'url': newContentform.url.value,
-//                 'time': newContentform.time.value,
-//                 '_xsrf': getCookie("_xsrf")
-//             }
-//         })
-//         .done((data) => {
-//             UIkit.modal(document.getElementById("new-content-modal")).hide();
-//             for (item of data) {
-//                 existContentIdList.push(item['_id']);
-//             }
-//             renderContent(data);
-//         })
-//         .fail((data) => {});
-// }
 
 function postDeleteContent() {
     var deleteContentform = document.getElementById('delete-content-form');
