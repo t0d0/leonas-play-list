@@ -1,19 +1,12 @@
 # coding:utf-8
-import json
-from typing import Optional, Any
 
 import tornado
-from tornado import httputil
 from tornado.escape import json_decode
-from tornado.routing import _RuleList
 
 
 class LPLAPIBaseHandler(tornado.web.RequestHandler):
     SUPPORTED_METHODS = tornado.web.RequestHandler.SUPPORTED_METHODS + ('QUERY',)
     args = {}
-
-    # def initialize(self) -> None:
-    #     self.args = None
 
     def prepare(self):
         if self.request.headers['Content-Type'] == 'application/json':

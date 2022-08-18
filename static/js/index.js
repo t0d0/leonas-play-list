@@ -107,62 +107,31 @@ function postEditContent() {
 }
 
 
-function sendGood(id) {
-    $.ajax({
-            url: 'good',
-            dataType: 'html',
-            type: 'POST',
-            data: {
-                '_xsrf': getCookie("_xsrf"),
-                'target': id,
-            }
-        })
-        .done((data) => {
-            document.getElementById('good' + id).innerHTML = Number(document.getElementById('good' + id).innerHTML) + 1;
-        })
-        .fail((data) => {});
-    return false;
-}
+
 
 function sendFavorite(id) {
-    $.ajax({
-            url: 'api/favorite',
-            dataType: 'html',
-            type: 'POST',
-            data: {
+    const data = {
                 'target': id,
                 '_xsrf': getCookie("_xsrf"),
-            }
-        })
-        .done((data) => {
-            //            document.getElementById('good' + id).innerHTML = Number(document.getElementById('good' + id).innerHTML) + 1;
+    };
+    ajax('api/favorite', 'POST', data).then(data => {
             document.getElementById(id).querySelector('#favorite-btn').hidden = true;
             document.getElementById(id).querySelector('#unfavorite-btn').hidden = false;
-
-        })
-        .fail((data) => {});
+    });
     return false;
 }
 
 function sendUnFavorite(id) {
-    $.ajax({
-            url: 'api/favorite',
-            dataType: 'html',
-            type: 'DELETE',
-            data: {
+    const data = {
                 'target': id,
                 '_xsrf': getCookie("_xsrf"),
-            }
-        })
-        .done((data) => {
+    };
+    ajax('api/favorite', 'DELETE', data).then(data => {
             document.getElementById(id).querySelector('#favorite-btn').hidden = false;
             document.getElementById(id).querySelector('#unfavorite-btn').hidden = true;
-        })
-        .fail((data) => {});
+    });
     return false;
 }
-
-
 
 function getParam(name, url) {
     if (!url) url = window.location.href;

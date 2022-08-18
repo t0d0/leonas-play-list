@@ -20,7 +20,7 @@ class LPLAPIContentHandler(LPLAPIBaseHandler):
         search_word = self.get_argument('search', '')
         #        完全一致
         perfect = self.get_argument('perfect', '')
-        exist_id = self.get_argument('exist','')
+        exist_id = self.get_argument('exist', '')
         exist_id = exist_id.split(',')
         if perfect == "true":
             perfect = True
@@ -28,7 +28,6 @@ class LPLAPIContentHandler(LPLAPIBaseHandler):
         artist = self.get_argument('artist', '')
 
         favorite_flg = self.get_argument('favorite', '')
-
 
         if favorite_flg == "true":
             favorite_flg = True
@@ -47,8 +46,8 @@ class LPLAPIContentHandler(LPLAPIBaseHandler):
                 favorited_list = []
         else:
             print('ログインしてないユーザ')
-            print(self.get_argument('local-favorite','[]'))
-            favorited_list = json.loads(self.get_argument('local-favorite','[]'))
+            print(self.get_argument('local-favorite', '[]'))
+            favorited_list = json.loads(self.get_argument('local-favorite', '[]'))
             #            pprint.pprint(favorited_list)
 
             if favorited_list is not None:
@@ -90,13 +89,13 @@ class LPLAPIContentHandler(LPLAPIBaseHandler):
         コンテンツの新規投稿を行う。
 
         """
-        titles = util.split_vertical_bar(self.get_argument('title',''))
-        times = util.split_vertical_bar(self.get_argument('time',''))
+        titles = util.split_vertical_bar(self.get_argument('title', ''))
+        times = util.split_vertical_bar(self.get_argument('time', ''))
         content_db = self.application.content_db
         inserted_ids = []
         for (title, time) in zip(titles, times):
             data = content_db.ContentDataFormat(title=title,
-                                                video_id=util.get_video_id(self.get_argument('url','')),
+                                                video_id=util.get_video_id(self.get_argument('url', '')),
                                                 time=util.convert_time(time))
             insert_result = await content_db.set_data(data)
             inserted_ids.append(str(insert_result.inserted_id))
@@ -117,11 +116,11 @@ class LPLAPIContentHandler(LPLAPIBaseHandler):
         """
         print('edit')
         content_db = self.application.content_db
-        update_data = content_db.ContentDataFormat(_id=self.get_argument('target',''),
-                                                   title=self.get_argument('title',''),
-                                                   artist=self.get_argument('artist',''),
-                                                   video_id=util.get_video_id(self.get_argument('url','')),
-                                                   time=util.convert_time(self.get_argument('time','')))
+        update_data = content_db.ContentDataFormat(_id=self.get_argument('target', ''),
+                                                   title=self.get_argument('title', ''),
+                                                   artist=self.get_argument('artist', ''),
+                                                   video_id=util.get_video_id(self.get_argument('url', '')),
+                                                   time=util.convert_time(self.get_argument('time', '')))
 
         update_result = await content_db.update_data(update_data)
         for i, data in enumerate(update_result):

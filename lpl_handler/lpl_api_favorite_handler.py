@@ -1,9 +1,10 @@
 import tornado
-from lpl_handler.lpl_base_handler import LPLIndexBaseHandler
+
+from lpl_handler.lpl_api_base_handler import LPLAPIBaseHandler
 
 
 # TODO:結果をjsonで返却するように変更したい。
-class LPLAPIFavoriteHandler(LPLIndexBaseHandler):
+class LPLAPIFavoriteHandler(LPLAPIBaseHandler):
     async def post(self):
         print('favorite')
         user = self.get_secure_cookie("user").decode('utf-8')
