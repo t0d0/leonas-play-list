@@ -4,29 +4,24 @@ var renderedContentValue = 0;
 var loadedEmbededYTValue = 0;
 isLogin = document.getElementById('login-flg').value == 'True';
 
-
-
 async function ajax(url = '', method = '', data = {}) {
-    // 既定のオプションには * が付いています
 
     const response = await fetch(url, {
-        method: method, // *GET, POST, PUT, DELETE, etc.
-        mode: 'same-origin', // no-cors, *cors, same-origin
-        cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-        credentials: 'same-origin', // include, *same-origin, omit
+        method: method,
+        mode: 'same-origin',
+        cache: 'no-cache',
+        credentials: 'same-origin',
         headers: {
             'Content-Type': 'application/json',
-            // 'Content-Type': 'application/json',
             'Accept': 'application/json',
             'charset':'utf-8',
-            // 'Accept': 'application/json',
             'X-Xsrftoken':getCookie("_xsrf")
         },
-        redirect: 'follow', // manual, *follow, error
-        referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
-        body: JSON.stringify(data) // 本文のデータ型は "Content-Type" ヘッダーと一致させる必要があります
+        redirect: 'follow',
+        referrerPolicy: 'no-referrer',
+        body: JSON.stringify(data)
     })
-    return response.json(); // JSON のレスポンスをネイティブの JavaScript オブジェクトに解釈
+    return response.json();
 }
 
 
@@ -234,12 +229,7 @@ function getAllLocalStrageFavorites() {
     return localStrageFavorites;
 
 }
-//function onLoadEmbededYT() {
-//    loadedEmbededYTValue += 1;
-//    if (renderedContentValue == loadedEmbededYTValue) {
-//        removeLoading();
-//    }
-//}
+
 window.onscroll = function (ev) {
 
     var elScrollable;
