@@ -4,8 +4,33 @@ var renderedContentValue = 0;
 var loadedEmbededYTValue = 0;
 isLogin = document.getElementById('login-flg').value == 'True';
 
+
+
+async function ajax(url = '', method = '', data = {}) {
+    // 既定のオプションには * が付いています
+
+    const response = await fetch(url, {
+        method: method, // *GET, POST, PUT, DELETE, etc.
+        mode: 'same-origin', // no-cors, *cors, same-origin
+        cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+        credentials: 'same-origin', // include, *same-origin, omit
+        headers: {
+            'Content-Type': 'application/json',
+            // 'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'charset':'utf-8',
+            // 'Accept': 'application/json',
+            'X-Xsrftoken':getCookie("_xsrf")
+        },
+        redirect: 'follow', // manual, *follow, error
+        referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+        body: JSON.stringify(data) // 本文のデータ型は "Content-Type" ヘッダーと一致させる必要があります
+    })
+    return response.json(); // JSON のレスポンスをネイティブの JavaScript オブジェクトに解釈
+}
+
+
 function changeDeleteTarget(id) {
-    console.log(id);
     document.getElementById('delete-target').value = id;
 
 }
@@ -30,75 +55,75 @@ function getCookie(name) {
 
 function postNewContent() {
     var newContentform = document.getElementById('new-content-form');
-    $.ajax({
-            url: '/content',
-            dataType: 'json',
-            type: 'POST',
-            data: {
-                'title': newContentform.title.value,
-                'url': newContentform.url.value,
-                'time': newContentform.time.value,
-                '_xsrf': getCookie("_xsrf")
-            }
-        })
-        .done((data) => {
-            UIkit.modal(document.getElementById("new-content-modal")).hide();
-            for (item of data) {
-                existContentIdList.push(item['_id']);
-            }
-            renderContent(data);
-        })
-        .fail((data) => {});
+
+    const data = {
+        'title': newContentform.title.value,
+        'url': newContentform.url.value,
+        'time': newContentform.time.value,
+        '_xsrf': getCookie("_xsrf")
+    };
+    ajax('api/content', 'POST', data).then(data => {
+        UIkit.modal(document.getElementById("new-content-modal")).hide();
+        for (item of data) {
+            existContentIdList.push(item['_id']);
+        }
+        renderContent(data);
+
+    });
 }
+
+//     $.ajax({
+//             url: '/content',
+//             dataType: 'json',
+//             type: 'POST',
+//             data: {
+//                 'title': newContentform.title.value,
+//                 'url': newContentform.url.value,
+//                 'time': newContentform.time.value,
+//                 '_xsrf': getCookie("_xsrf")
+//             }
+//         })
+//         .done((data) => {
+//             UIkit.modal(document.getElementById("new-content-modal")).hide();
+//             for (item of data) {
+//                 existContentIdList.push(item['_id']);
+//             }
+//             renderContent(data);
+//         })
+//         .fail((data) => {});
+// }
 
 function postDeleteContent() {
     var deleteContentform = document.getElementById('delete-content-form');
-    $.ajax({
-            url: 'api/content',
-            dataType: 'json',
-            type: 'DELETE',
-            data: {
-                'target': deleteContentform.target.value,
-                '_xsrf': getCookie("_xsrf")
-            }
-        })
-        .done((data) => {
+    const data = {
+            'target': deleteContentform.target.value,
+            '_xsrf': getCookie("_xsrf")
+    };
+    ajax('api/content', 'DELETE', data).then(data => {
             document.getElementById(deleteContentform.target.value).remove();
             renderedContentValue -= 1;
             loadedEmbededYTValue -= 1;
             UIkit.modal(document.getElementById("delete-confirm-modal")).hide();
-        })
-        .fail((data) => {
-            console.log(data);
-        });
+    });
+
 }
 
 function postEditContent() {
     var editform = document.getElementById('edit-form');
-    //    event.preventDefault();
-    $.ajax({
-            url: '/content',
-            dataType: 'json',
-            type: 'PUT',
-            data: {
+    const data = {
                 'target': editform.target.value,
                 'title': editform.title.value,
                 'artist': editform.artist.value,
                 'url': editform.url.value,
                 'time': editform.time.value,
                 '_xsrf': getCookie("_xsrf")
-            }
-        })
-        .done((data) => {
+    };
+    ajax('api/content', 'PUT', data).then(data => {
             var target_card = document.getElementById(editform.target.value);
             var template = document.getElementById('content-template');
             setTemplateValue(target_card, data);
-            console.log(data);
             UIkit.modal(document.getElementById("edit-modal")).hide();
-        })
-        .fail((data) => {
-            console.log(data);
-        });
+    });
 }
 
 
@@ -131,7 +156,6 @@ function sendFavorite(id) {
         })
         .done((data) => {
             //            document.getElementById('good' + id).innerHTML = Number(document.getElementById('good' + id).innerHTML) + 1;
-            console.log(data);
             document.getElementById(id).querySelector('#favorite-btn').hidden = true;
             document.getElementById(id).querySelector('#unfavorite-btn').hidden = false;
 
@@ -151,7 +175,6 @@ function sendUnFavorite(id) {
             }
         })
         .done((data) => {
-            console.log(data);
             document.getElementById(id).querySelector('#favorite-btn').hidden = false;
             document.getElementById(id).querySelector('#unfavorite-btn').hidden = true;
         })
@@ -175,8 +198,8 @@ function setTemplateValue(template, data) {
     const dom = template;
     dom.querySelector('#title').textContent = data['title'];
     dom.querySelector('#artist').textContent = data['artist'] == "" ? "不明なアーティスト" : data['artist'];
-    dom.querySelector('#artist-btn').setAttribute('href',`/?artist=${encodeURIComponent(data['artist'] == ""?"unknown":data['artist'])}`);
-    
+    dom.querySelector('#artist-btn').setAttribute('href', `/?artist=${encodeURIComponent(data['artist'] == ""?"unknown":data['artist'])}`);
+
     dom.querySelector('#youtube').setAttribute("videoid", data['video_id']);
     dom.querySelector('#youtube').setAttribute("params", `controls=0&start=${data['time']}&modestbranding=2&rel=0&enablejsapi=1`);
     dom.querySelector('#youtubeapp-btn').setAttribute("href", `https://www.youtube.com/watch?v=${data['video_id']}&t=${data['time']}`)
@@ -227,68 +250,27 @@ function renderContent(data) {
         }
     }
 }
-//
-//function showLoading() {
-//    if (document.getElementById('loading-area')) {
-//        return;
-//    }
-//    var template = document.getElementById('loading-template');
-//    var clone = document.importNode(template.content, true);
-//    document.getElementById('content-area').appendChild(clone);
-//
-//}
-//
-//function removeLoading() {
-//    var content_area = document.getElementById('loading-area');
-//    content_area.remove();
-//}
 
-
-function getNextContent() {
-    console.log("next loading");
-    //    if (!isReadyNextLoading()) {
-    //        getNextContent();
-    //    } else {
-    //    renderFlg = true; //    debug
+async function getNextContent() {
     if (renderFlg) {
-        //        showLoading();
         renderFlg = false;
-        console.log({
-                    '_xsrf': getCookie("_xsrf"),
-                    'exist': existContentIdList.join(','),
-                    'search': getParam('search', location.href),
-                    'perfect': getParam('perfect', location.href),
-                    'favorite': getParam('favorite', location.href),
-                    'artist': getParam('artist', location.href),
-                    'local-favorite': JSON.stringify(getAllLocalStrageFavorites()),
-                });
-        $.ajax({
-                url: 'api/content',
-                dataType: 'json',
-                type: 'QUERY',
-                data: {
-                    '_xsrf': getCookie("_xsrf"),
-                    'exist': existContentIdList.join(','),
-                    'search': getParam('search', location.href),
-                    'perfect': getParam('perfect', location.href),
-                    'favorite': getParam('favorite', location.href),
-                    'artist': getParam('artist', location.href),
-                    'local-favorite': JSON.stringify(getAllLocalStrageFavorites()),
-                }
-            })
-            .done((data) => {
-//            console.log(data);
-                for (item of data) {
-                    existContentIdList.push(item['_id']);
-                }
-                renderContent(data);
-            })
-            .fail((data) => {})
-            .always((data) => {
-                renderFlg = true;
-            });
+        const data = {
+            '_xsrf': getCookie("_xsrf"),
+            'exist': existContentIdList.join(','),
+            'search': getParam('search', location.href),
+            'perfect': getParam('perfect', location.href),
+            'favorite': getParam('favorite', location.href),
+            'artist': getParam('artist', location.href),
+            'local-favorite': JSON.stringify(getAllLocalStrageFavorites())
+        };
+        ajax('api/content', 'QUERY', data).then(data => {
+            for (const item of data) {
+                existContentIdList.push(item['_id']);
+            }
+            renderContent(data);
+            renderFlg = true;
+        });
     }
-    //    }
 }
 
 function getAllLocalStrageFavorites() {

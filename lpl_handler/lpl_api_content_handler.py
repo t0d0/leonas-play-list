@@ -1,12 +1,15 @@
 import json
 
 import tornado
+from tornado.escape import json_decode
 
+from lpl_handler.lpl_api_base_handler import LPLAPIBaseHandler
 from lpl_handler.lpl_base_handler import LPLIndexBaseHandler
 from lpl_util import util
 
 
-class LPLAPIContentHandler(LPLIndexBaseHandler):
+class LPLAPIContentHandler(LPLAPIBaseHandler):
+
     async def query(self) -> None:
         """QUERYメソッド
         コンテンツの検索処理を行う。
@@ -15,19 +18,17 @@ class LPLAPIContentHandler(LPLIndexBaseHandler):
         TODO:でかすぎる。どうにかしたい。
         """
         search_word = self.get_argument('search', '')
-
         #        完全一致
         perfect = self.get_argument('perfect', '')
-
-        exist_id = self.get_argument('exist')
+        exist_id = self.get_argument('exist','')
         exist_id = exist_id.split(',')
-
         if perfect == "true":
             perfect = True
 
         artist = self.get_argument('artist', '')
 
         favorite_flg = self.get_argument('favorite', '')
+
 
         if favorite_flg == "true":
             favorite_flg = True
@@ -46,7 +47,8 @@ class LPLAPIContentHandler(LPLIndexBaseHandler):
                 favorited_list = []
         else:
             print('ログインしてないユーザ')
-            favorited_list = json.loads(self.get_argument('local-favorite'))
+            print(self.get_argument('local-favorite','[]'))
+            favorited_list = json.loads(self.get_argument('local-favorite','[]'))
             #            pprint.pprint(favorited_list)
 
             if favorited_list is not None:
@@ -88,20 +90,20 @@ class LPLAPIContentHandler(LPLIndexBaseHandler):
         コンテンツの新規投稿を行う。
 
         """
-        titles = util.split_vertical_bar(self.get_argument('title'))
-        times = util.split_vertical_bar(self.get_argument('time'))
+        titles = util.split_vertical_bar(self.get_argument('title',''))
+        times = util.split_vertical_bar(self.get_argument('time',''))
         content_db = self.application.content_db
         inserted_ids = []
         for (title, time) in zip(titles, times):
             data = content_db.ContentDataFormat(title=title,
-                                                video_id=util.get_video_id(self.get_argument('url')),
+                                                video_id=util.get_video_id(self.get_argument('url','')),
                                                 time=util.convert_time(time))
             insert_result = await content_db.set_data(data)
             inserted_ids.append(str(insert_result.inserted_id))
 
         content_data_list = []
         for inserted_id in inserted_ids:
-            content_data_list.extend(list(content_db.get_data_by_id(inserted_id)))
+            content_data_list.extend(list(await content_db.get_data_by_id(inserted_id)))
         print(content_data_list)
         for data in content_data_list:
             data['_id'] = str(data['_id'])
@@ -115,11 +117,11 @@ class LPLAPIContentHandler(LPLIndexBaseHandler):
         """
         print('edit')
         content_db = self.application.content_db
-        update_data = content_db.ContentDataFormat(_id=self.get_argument('target'),
-                                                   title=self.get_argument('title'),
-                                                   artist=self.get_argument('artist'),
-                                                   video_id=util.get_video_id(self.get_argument('url')),
-                                                   time=util.convert_time(self.get_argument('time')))
+        update_data = content_db.ContentDataFormat(_id=self.get_argument('target',''),
+                                                   title=self.get_argument('title',''),
+                                                   artist=self.get_argument('artist',''),
+                                                   video_id=util.get_video_id(self.get_argument('url','')),
+                                                   time=util.convert_time(self.get_argument('time','')))
 
         update_result = await content_db.update_data(update_data)
         for i, data in enumerate(update_result):
