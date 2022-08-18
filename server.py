@@ -1,11 +1,14 @@
 # coding:utf-8
-
-import os.path
+import asyncio
+import os
 
 import tornado.httpserver
 import tornado.ioloop
 import tornado.web
 import sys
+
+from tornado.netutil import bind_sockets
+from tornado.tcpserver import TCPServer
 
 import lpl_handler
 from lpl_db import user_db, content_db, favorite_db
@@ -48,6 +51,22 @@ application = LPLApplication([
 if __name__ == "__main__":
     server_port = config.port
     print("server start:" + str(server_port))
-    http_server = tornado.httpserver.HTTPServer(application)
-    http_server.listen(server_port)
-    tornado.ioloop.IOLoop.current().start()
+    if os.name == 'nt':
+        print('on Windows')
+        http_server = tornado.httpserver.HTTPServer(application)
+        http_server.listen(server_port)
+        tornado.ioloop.IOLoop.current().start()
+
+    elif os.name == 'posix':
+        print('on Mac or Linux')
+        sockets = bind_sockets(server_port)
+        tornado.process.fork_processes(0)
+
+
+        async def post_fork_main():
+            http_server = tornado.httpserver.HTTPServer(application)
+            http_server.add_sockets(sockets)
+            await asyncio.Event().wait()
+
+
+        asyncio.run(post_fork_main())
