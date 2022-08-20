@@ -401,6 +401,10 @@ svg{
     padding-left: 0px !important;
     padding-right: 0px !important;
 }
+.icons a {
+    text-decoration: none;
+
+}
 .material-icons{
     display: inline-flex;
 /*    vertical-align: middle;*/
@@ -417,3 +421,12 @@ svg{
 .list-section{
     margin-top: 1rem;
 }
+.card{
+    border-radius: 10px;
+    overflow: hidden;
+}
+.uk-modal-body, .modal {
+    border-radius: 10px !important;
+    overflow: hidden !important;
+}
+
