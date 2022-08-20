@@ -1,8 +1,8 @@
-var existContentIdList = [];
-var renderFlg = true;
-var renderedContentValue = 0;
-var loadedEmbededYTValue = 0;
-isLogin = document.getElementById('login-flg').value == 'True';
+const existContentIdList = [];
+let renderFlg = true;
+let renderedContentValue = 0;
+let loadedEmbededYTValue = 0;
+isLogin = document.getElementById('login-flg').value === 'True';
 
 async function ajax(url = '', method = '', data = {}) {
 
@@ -35,21 +35,21 @@ function changeEditTarget(id, url, title, artist, time) {
     document.getElementById('edit-url').value = url;
     document.getElementById('edit-artist').value = artist;
     document.getElementById('edit-title').value = title;
-    var hour = Math.floor(time / 3600);
+    const hour = Math.floor(time / 3600);
     time -= hour * 3600;
-    var minute = Math.floor(time / 60);
+    const minute = Math.floor(time / 60);
     time -= minute * 60;
-    var sec = time;
+    const sec = time;
     document.getElementById('edit-time').value = `${hour}:${minute}:${sec}`;
 }
 
 function getCookie(name) {
-    var r = document.cookie.match("\\b" + name + "=([^;]*)\\b");
+    const r = document.cookie.match("\\b" + name + "=([^;]*)\\b");
     return r ? r[1] : undefined;
 }
 
 function postNewContent() {
-    var newContentform = document.getElementById('new-content-form');
+    const newContentform = document.getElementById('new-content-form');
 
     const data = {
         'title': newContentform.title.value,
@@ -69,7 +69,7 @@ function postNewContent() {
 
 
 function postDeleteContent() {
-    var deleteContentform = document.getElementById('delete-content-form');
+    const deleteContentform = document.getElementById('delete-content-form');
     const data = {
             'target': deleteContentform.target.value,
             '_xsrf': getCookie("_xsrf")
@@ -84,7 +84,7 @@ function postDeleteContent() {
 }
 
 function postEditContent() {
-    var editform = document.getElementById('edit-form');
+    const editform = document.getElementById('edit-form');
     const data = {
                 'target': editform.target.value,
                 'title': editform.title.value,
@@ -94,9 +94,8 @@ function postEditContent() {
                 '_xsrf': getCookie("_xsrf")
     };
     ajax('api/content', 'PUT', data).then(data => {
-            var target_card = document.getElementById(editform.target.value);
-            var template = document.getElementById('content-template');
-            setTemplateValue(target_card, data);
+        const target_card = document.getElementById(editform.target.value);
+        setTemplateValue(target_card, data);
             UIkit.modal(document.getElementById("edit-modal")).hide();
     });
 }
@@ -131,7 +130,7 @@ function sendUnFavorite(id) {
 function getParam(name, url) {
     if (!url) url = window.location.href;
     name = name.replace(/[\[\]]/g, "\\$&");
-    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+    const regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
         results = regex.exec(url);
     if (!results) return null;
     if (!results[2]) return '';
@@ -179,15 +178,12 @@ function setTemplateValue(template, data) {
 }
 
 function renderContent(data) {
-    if (data.length == 0) {
-        //        document.getElementById('loading-text').innerHTML = "何も見つからないよ"
-    }
     for (i of data) {
         if (i != undefined && (i['title'] != undefined)) {
             renderedContentValue += 1;
-            var template = document.getElementById('content-template');
-            var clone = template.content.cloneNode(true);
-            var div = clone.querySelector('#content-root');
+            const template = document.getElementById('content-template');
+            let clone = template.content.cloneNode(true);
+            const div = clone.querySelector('#content-root');
             div.id = `${i['_id']}`;
             clone = setTemplateValue(clone, i);
             document.getElementById('content-area').appendChild(clone);
@@ -218,10 +214,10 @@ async function getNextContent() {
 }
 
 function getAllLocalStrageFavorites() {
-    var localStrageFavorites = [];
-    for (var i = 0; i < localStorage.length; ++i) {
-        var key = localStorage.key(i);
-        var value = localStorage[key];
+    const localStrageFavorites = [];
+    for (let i = 0; i < localStorage.length; ++i) {
+        const key = localStorage.key(i);
+        const value = localStorage[key];
         if (key.indexOf('favorite') != -1) {
             localStrageFavorites.push(value);
         }
@@ -232,17 +228,17 @@ function getAllLocalStrageFavorites() {
 
 window.onscroll = function (ev) {
 
-    var elScrollable;
+    let elScrollable;
     if (navigator.userAgent.indexOf('WebKit') < 0) {
         elScrollable = document.documentElement;
     } else {
         elScrollable = document.body;
     }
 
-    var scrollTop = elScrollable.scrollTop;
-    var windowHeight = window.innerHeight;
-    var pageHeight = elScrollable.scrollHeight;
-    var marginBottom = 10;
+    const scrollTop = elScrollable.scrollTop;
+    const windowHeight = window.innerHeight;
+    const pageHeight = elScrollable.scrollHeight;
+    const marginBottom = 10;
     if (windowHeight + scrollTop + marginBottom >= pageHeight) {
         getNextContent();
     }
@@ -256,9 +252,9 @@ function isReadyNextLoading() {
     return loadedEmbededYTValue == renderedContentValue;
 }
 
-function settingsliderParams() {
-    var elems = document.querySelectorAll('.slider');
-    var height_coefficient = 1;
+function settingSliderParams() {
+    const elems = document.querySelectorAll('.slider');
+    let height_coefficient = 1;
     if ((screen.width > screen.height) || screen.width >= 1280) {
         //横長
         height_coefficient = 9;
@@ -266,13 +262,13 @@ function settingsliderParams() {
         //縦長
         height_coefficient = 5;
     }
-    var options = {
+    const options = {
         indicators: false,
         height: screen.width / height_coefficient,
         duration: 1000,
         interval: 5000
-    }
-    var instances = M.Slider.init(elems, options);
+    };
+    const instances = M.Slider.init(elems, options);
 }
 
 function expandSearch() {
@@ -284,15 +280,13 @@ function hideSearch() {
     document.getElementById("search").style.display = "none";
 }
 //スライダーの処理
-document.addEventListener('DOMContentLoaded', settingsliderParams);
-window.addEventListener('resize', settingsliderParams);
+document.addEventListener('DOMContentLoaded', settingSliderParams);
+window.addEventListener('resize', settingSliderParams);
 
 document.addEventListener('DOMContentLoaded', function () {
-    var options = {
-
-    }
-    var elems = document.querySelectorAll('#fav-modal');
-    var instances = M.Modal.init(elems, options);
+    const options = {};
+    const elems = document.querySelectorAll('#fav-modal');
+    const instances = M.Modal.init(elems, options);
 
 });
 
