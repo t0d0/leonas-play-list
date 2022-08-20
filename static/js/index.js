@@ -277,11 +277,12 @@ function hideSearch() {
 document.addEventListener('DOMContentLoaded', settingSliderParams);
 window.addEventListener('resize', settingSliderParams);
 
+
+
 document.addEventListener('DOMContentLoaded', function () {
     const options = {};
-    const elems = document.querySelectorAll('#fav-modal');
+    const elems = document.querySelectorAll('#copyright-modal');
     const instances = M.Modal.init(elems, options);
-
 });
 
 function localFavorite(target) {
@@ -296,6 +297,9 @@ function localUnFavorite(target) {
     document.getElementById(target).querySelector('#local-unfavorite-btn').hidden = true;
 }
 
-
+  document.addEventListener('DOMContentLoaded', function() {
+    var elems = document.querySelectorAll('.dropdown-trigger');
+    var instances = M.Dropdown.init(elems, {hover:false});
+  });
 
 getNextContent();

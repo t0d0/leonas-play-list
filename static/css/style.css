@@ -19,7 +19,7 @@ body {
     height: 60px;
     overflow: hidden;
     margin-bottom: 0px !important;
-    line-height: 22px !important!;
+    line-height: 22px !important;
 }
 .music-title {
     font-family: Itim-Regular;
@@ -356,7 +356,7 @@ body {
     width: 100% !important;
 }
 .search-area{
-    width: 77% !important;
+    width: 80% !important;
 }
 #search{
     display: none;
@@ -364,13 +364,13 @@ body {
 svg{
     color: #ffab40;
 }
-nav{
-    margin-top: -3rem;
-    z-index: 10;
-    position: fixed;
-}
+/*nav{*/
+/*    margin-top: -3rem;*/
+/*    z-index: 10;*/
+/*    position: fixed;*/
+/*}*/
 .slider{
-    margin-top: 3rem;
+    /*margin-top: 3rem;*/
 }
 .slider .slides{
     background-color: white !important;
@@ -381,6 +381,22 @@ nav{
     margin-left: 4% !important;
 
 }
+
+.dropdown-content{
+    min-width: 200px;
+}
+.menu-icon{
+    margin-right: 0% !important;
+    margin-left: 0% !important;
+
+}
+
+.copyright-pre{
+    background-color: #222;
+    color: rgba(255,255,255,.7);
+    border-color: #222;
+}
+
 .icons{
     padding-left: 0px !important;
     padding-right: 0px !important;
@@ -391,4 +407,13 @@ nav{
 }
 .tab-text{
     font-size: 24px !important;
+}
+.expand-search-area{
+    width: 60%;
+}
+.show-always{
+    /*transform: translateX(0%) !important;*/
+}
+.list-section{
+    margin-top: 1rem;
 }
