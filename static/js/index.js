@@ -246,12 +246,6 @@ window.onscroll = function (ev) {
 };
 
 
-
-
-function isReadyNextLoading() {
-    return loadedEmbededYTValue == renderedContentValue;
-}
-
 function settingSliderParams() {
     const elems = document.querySelectorAll('.slider');
     let height_coefficient = 1;
