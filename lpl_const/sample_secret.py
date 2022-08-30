@@ -11,3 +11,6 @@ cookie_secret: str = "sample"
 
 salt: str = "sample"
 """パスワードハッシュ用の文字列"""
+
+youtube_api_key: str = 'AIzaSyDlVdbwOJt7vk-K_sbHBqZxUhHeGxEX7QQ'
+"""youtube data api用のAPIKey"""

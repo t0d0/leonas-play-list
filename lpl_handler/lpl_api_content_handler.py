@@ -5,7 +5,7 @@ from tornado.escape import json_decode
 
 from lpl_handler.lpl_api_base_handler import LPLAPIBaseHandler
 from lpl_handler.lpl_base_handler import LPLIndexBaseHandler
-from lpl_util import util
+from lpl_util import util, youtube_util
 
 
 class LPLAPIContentHandler(LPLAPIBaseHandler):
@@ -94,10 +94,13 @@ class LPLAPIContentHandler(LPLAPIBaseHandler):
         times = util.split_vertical_bar(self.get_argument('time', ''))
         content_db = self.application.content_db
         inserted_ids = []
+        video_id = util.get_video_id(self.get_argument('url', ''))
+        published_at = youtube_util.search(video_id)
         for (title, time) in zip(titles, times):
             data = content_db.ContentDataFormat(title=title,
-                                                video_id=util.get_video_id(self.get_argument('url', '')),
-                                                time=util.convert_time(time))
+                                                video_id=video_id,
+                                                time=util.convert_time(time),
+                                                published_at=published_at)
             insert_result = await content_db.set_data(data)
             inserted_ids.append(str(insert_result.inserted_id))
 

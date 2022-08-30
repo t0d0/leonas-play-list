@@ -141,6 +141,8 @@ function setTemplateValue(template, data) {
     const dom = template;
     dom.querySelector('#title').textContent = data['title'];
     dom.querySelector('#artist').textContent = data['artist'] == "" ? "不明なアーティスト" : data['artist'];
+    console.log(new Date(data['published_at']));
+    dom.querySelector('#published-at').textContent = data['published_at'] == "null" ? "未登録" : formatDate(new Date(data['published_at']));
     dom.querySelector('#artist-btn').setAttribute('href', `/?artist=${encodeURIComponent(data['artist'] == ""?"unknown":data['artist'])}`);
 
     dom.querySelector('#youtube').setAttribute("videoid", data['video_id']);
@@ -301,5 +303,12 @@ function localUnFavorite(target) {
     var elems = document.querySelectorAll('.dropdown-trigger');
     var instances = M.Dropdown.init(elems, {hover:false});
   });
+
+function formatDate(dt) {
+  var y = dt.getFullYear();
+  var m = dt.getMonth()+1;
+  var d = dt.getDate();
+  return (y + '年' + m + '月' + d + '日');
+}
 
 getNextContent();

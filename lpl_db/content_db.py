@@ -28,13 +28,17 @@ class ContentDb(BaseDb):
         """アーティスト情報"""
         _id: str
         """コンテンツID"""
+        published_at: str
+        """投稿日"""
 
-        def __init__(self, title: str = "", video_id: str = "", time: int = 0, artist: str = "", _id: str = ""):
+        def __init__(self, title: str = "", video_id: str = "", time: int = 0, artist: str = "", _id: str = "",
+                     published_at: str = ""):
             self.title = title
             self.video_id = video_id
             self.time = time
             self.artist = artist
             self._id = _id
+            self.published_at = published_at
 
     async def set_data(self, data: ContentDataFormat):
         """新規コンテンツの挿入
@@ -49,7 +53,13 @@ class ContentDb(BaseDb):
             content_db.set_data({"title":"song_title","video_id":"xxxxx","time":999})
 
         """
-        insert_data = {"title": data["title"], "video_id": data["video_id"], "time": data["time"], "artist": ""}
+        insert_data = {
+            "title": data["title"],
+            "video_id": data["video_id"],
+            "time": data["time"],
+            "artist": "",
+            "published_at" : data["published_at"]
+        }
         result = await self.lpl_co.insert_one(insert_data)
         return result
 
@@ -205,8 +215,14 @@ class ContentDb(BaseDb):
     async def __result_to_model_list(self, result):
         model_list = []
         async for data in result:
-            model = self.ContentDataFormat(data["title"], data["video_id"], data["time"], data["artist"],
-                                           str(data["_id"]))
+            model = self.ContentDataFormat(
+                data["title"],
+                data["video_id"],
+                data["time"],
+                data["artist"],
+                str(data["_id"]),
+                data["published_at"] if "published_at" in data else None
+            )
             model_list.append(model.__dict__)
 
         return model_list
