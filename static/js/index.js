@@ -141,7 +141,6 @@ function setTemplateValue(template, data) {
     const dom = template;
     dom.querySelector('#title').textContent = data['title'];
     dom.querySelector('#artist').textContent = data['artist'] == "" ? "不明なアーティスト" : data['artist'];
-    console.log(new Date(data['published_at']));
     dom.querySelector('#published-at').textContent = data['published_at'] == "null" ? "未登録" : formatDate(new Date(data['published_at']));
     dom.querySelector('#artist-btn').setAttribute('href', `/?artist=${encodeURIComponent(data['artist'] == ""?"unknown":data['artist'])}`);
 
@@ -280,9 +279,10 @@ document.addEventListener('DOMContentLoaded', settingSliderParams);
 window.addEventListener('resize', settingSliderParams);
 
 
-
 document.addEventListener('DOMContentLoaded', function () {
-    const options = {};
+    const options = {
+        data : {}
+    };
     const elems = document.querySelectorAll('#copyright-modal');
     const instances = M.Modal.init(elems, options);
 });
@@ -311,4 +311,43 @@ function formatDate(dt) {
   return (y + '年' + m + '月' + d + '日');
 }
 
+
+
+
+//検索窓の入力時イベント
+document.getElementById("search").addEventListener('input', onChangeSearch);
+
+document.addEventListener('DOMContentLoaded', function() {
+    let options = {data: {"autocomplete":null,},
+    onAutocomplete:(a)=>console.log(a+"hoge")};
+    const elems = document.querySelectorAll('#search');
+    const instances = M.Autocomplete.init(elems, options);
+
+});
+
+
+
+function onChangeSearch(event){
+    console.log(event.target.value);
+    let data = {
+        search: event.target.value,
+        '_xsrf': getCookie("_xsrf")
+    }
+    ajax('api/search-suggestion', 'QUERY', data).then(data => {
+        // document.getElementById(deleteContentform.target.value).remove();
+        // UIkit.modal(document.getElementById("delete-confirm-modal")).hide();
+        console.log(data);
+
+        let hoge = data.reduce(function(target, key, index) {
+          target[key] = null;
+          return target;
+        }, {})
+        const elem = document.getElementById('search');
+        const instance = M.Autocomplete.getInstance(elem);
+
+        // console.log(hoge);
+        instance.updateData(hoge);
+    });
+
+}
 getNextContent();

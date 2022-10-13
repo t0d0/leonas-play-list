@@ -58,7 +58,7 @@ class ContentDb(BaseDb):
             "video_id": data["video_id"],
             "time": data["time"],
             "artist": "",
-            "published_at" : data["published_at"]
+            "published_at": data["published_at"]
         }
         result = await self.lpl_co.insert_one(insert_data)
         return result
@@ -76,12 +76,18 @@ class ContentDb(BaseDb):
         result = await self.get_data_by_id(update_data["_id"])
         return list(result)
 
-    async def get_data(self, search: str = "", without_target: list[str] = None, perfect: bool = False):
-        regex = constants.regex_keyword_any + '\Q' + search + '\E' + constants.regex_keyword_any
+    async def get_data(
+            self,
+            search: str = "",
+            without_target: list[str] = None,
+            perfect: bool = False):
+        regex = constants.regex_keyword_any + r'\Q' + search + r'\E' + constants.regex_keyword_any
         options = "i"
         if perfect:
-            regex = "^" + '\Q' + search + '\E' + "$"
+            regex = r"^" + r'\Q' + search + r'\E' + "$"
             options = ""
+
+        print(without_target)
 
         if without_target is None:
             detail_query = {
@@ -113,15 +119,16 @@ class ContentDb(BaseDb):
                         }}
                     ]}]}
 
-        query = self.__build_get_content_query(detail_query)
-        print(type(query))
+        query = self.__build_get_simple_content_query(detail_query)
         query_result = self.lpl_co.aggregate(query)
         result = await self.__result_to_model_list(query_result)
         return result
 
     async def get_data_by_artist(self, artist, without_target=None):
-        regex = "^\Q" + artist + "\E$"
+        regex = r"^\Q" + artist + r"\E$"
         options = ""
+
+        print(without_target)
         if without_target is None:
             detail_query = {
                 "artist": {
@@ -129,7 +136,6 @@ class ContentDb(BaseDb):
                     "$options": options
                 }}
         else:
-            without_target = []
             without_object_id_list = []
             for target in without_target:
                 without_object_id_list.append(ObjectId(target))
@@ -141,7 +147,7 @@ class ContentDb(BaseDb):
                         "$options": options
                     }}]}
 
-        query = self.__build_get_content_query(detail_query)
+        query = self.__build_get_simple_content_query(detail_query)
 
         query_result = self.lpl_co.aggregate(query)
         result = await self.__result_to_model_list(query_result)
@@ -165,7 +171,7 @@ class ContentDb(BaseDb):
                 {"_id": {"$in": target_object_id_list}}
             ]}
 
-        query = self.__build_get_content_query(detail_query)
+        query = self.__build_get_simple_content_query(detail_query)
         query_result = self.lpl_co.aggregate(query)
         result = await self.__result_to_model_list(query_result)
         return result
@@ -174,7 +180,7 @@ class ContentDb(BaseDb):
 
         detail_query = {"_id": ObjectId(target_id)}
 
-        query = self.__build_get_content_query(detail_query)
+        query = self.__build_get_simple_content_query(detail_query)
         query_result = self.lpl_co.aggregate(query)
         result = await self.__result_to_model_list(query_result)
         return result
@@ -188,6 +194,15 @@ class ContentDb(BaseDb):
                                        }
 
                                       ]).to_list(None)
+
+    async def get_data_by_video_id(self, video_id):
+
+        detail_query = {"video_id": video_id}
+
+        query = self.__build_get_simple_content_query(detail_query, limit=100,sort={"time":1})
+        query_result = self.lpl_co.aggregate(query)
+        result = await self.__result_to_model_list(query_result)
+        return result
 
     def get_artist_list(self):
         return self.lpl_co.aggregate([{"$group": {"_id": "$artist",
@@ -204,23 +219,88 @@ class ContentDb(BaseDb):
     def increment_good(self, target_id):
         self.lpl_co.update({"_id": ObjectId(target_id)}, {"$inc": {"good": 1}})
 
-    def __build_get_content_query(self, detail_query):
-        query = [
-            {"$match": detail_query},
-            {"$sample": {"size": 20}},
-            {"$limit": 20}
+    async def get_search_suggestions(self, search: str = ""):
+        regex = r'^\Q' + search + r'\E' + constants.regex_keyword_any
+        options = "i"
+        title_query = [
+            {
+                "$group": {
+                    "_id": "$title",
+                    "title": {
+                        "$first": "$title",
+                    }
+                }
+            },
+            {
+                "$match": {
+                    "title": {
+                        "$regex": regex,
+                        "$options": options
+                    }
+                }
+            },
+            {"$limit": 5}
         ]
+        artist_query = [
+            {
+                "$group": {
+                    "_id": "$artist",
+                    "artist": {
+                        "$first": "$artist",
+                    }
+                }
+            },
+            {
+                "$match": {
+                    "artist": {
+                        "$regex": regex,
+                        "$options": options
+                    }
+                }
+            },
+            {"$limit": 5}
+        ]
+        # title_query = self.__build_get_simple_content_query(title_detail_query, limit=5, random=False)
+        title_query_result = self.lpl_co.aggregate(title_query)
+        title_result = await self.__result_to_model_list(title_query_result)
+
+        # artist_query = self.__build_get_simple_content_query(artist_detail_query, limit=5, random=False)
+        artist_query_result = self.lpl_co.aggregate(artist_query)
+        artist_result = await self.__result_to_model_list(artist_query_result)
+
+        result = []
+
+        for title_result_item in title_result:
+            result.append(title_result_item["title"])
+
+        for artist_result_item in artist_result:
+            result.append(artist_result_item["artist"])
+
+        return result
+
+    @staticmethod
+    def __build_get_simple_content_query(detail_query, limit: int = 20, random: bool = True, sort: object = None):
+        query = [
+            {"$match": detail_query}
+        ]
+        if random:
+            query.append({"$sample": {"size": limit}})
+        else:
+            query.append({"$limit": limit})
+        if sort is not None:
+            query.append({"$sort": sort})
+        print(query)
         return query
 
     async def __result_to_model_list(self, result):
         model_list = []
         async for data in result:
             model = self.ContentDataFormat(
-                data["title"],
-                data["video_id"],
-                data["time"],
-                data["artist"],
-                str(data["_id"]),
+                data["title"] if "title" in data else None,
+                data["video_id"] if "video_id" in data else None,
+                data["time"] if "time" in data else None,
+                data["artist"] if "artist" in data else None,
+                str(data["_id"]) if "_id" in data else None,
                 data["published_at"] if "published_at" in data else None
             )
             model_list.append(model.__dict__)
