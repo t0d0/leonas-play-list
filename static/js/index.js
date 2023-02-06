@@ -146,7 +146,7 @@ function setTemplateValue(template, data) {
 
     dom.querySelector('#youtube').setAttribute("videoid", data['video_id']);
     dom.querySelector('#youtube').setAttribute("params", `controls=0&start=${data['time']}&modestbranding=2&rel=0&enablejsapi=1`);
-    dom.querySelector('#youtubeapp-btn').setAttribute("href", `https://www.youtube.com/watch?v=${data['video_id']}&t=${data['time']}`)
+    dom.querySelector('#youtubeapp-btn').setAttribute("href", `https://www.youtube.com/watch?v=${data['video_id']}&t=${data['time']}&rel=0&playsinline=1&`)
     dom.querySelector('#search-btn').setAttribute("href", `/?search=${encodeURIComponent(data['title'])}&perfect=true`);
     if (isLogin) {
         dom.querySelector('#favorite-btn').hidden = data['isFavorite']
@@ -350,4 +350,9 @@ function onChangeSearch(event){
     });
 
 }
+
+function onChangeVolumeSlider(event){
+    console.log(event);
+}
 getNextContent();
+

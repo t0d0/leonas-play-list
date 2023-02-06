@@ -5,147 +5,17 @@
 
 <head>
     <title>Leona'sPlayList</title>
-    <meta name="description" content="獅子神レオナの歌枠アーカイブの横断検索サービスです。誰でもコンテンツ追加ができます。">
-    <meta name=”keywords” content=”獅子神レオナ,獅子神,レオナ,プレイリスト,shishigami,leona,playlist,LeonasPlayList”>
-
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <!--     UIkit CSS -->
-    <link rel="stylesheet" href="{{static_url('css')}}/uikit.min.css" />
-
-    <!--    materialize CSS JS-->
-    <link rel="stylesheet" href="{{static_url('css')}}/materialize.min.css">
-    <link href="{{static_url('css')}}/icon.css" rel="stylesheet">
-
-
-    <!--     UIkit JS -->
-    <script src="https://cdn.jsdelivr.net/npm/uikit@3.3.3/dist/js/uikit.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/uikit@3.3.3/dist/js/uikit-icons.min.js"></script>
-
-    <!--    youtubeのiframeが重すぎるので軽量化のライブラリ入れる-->
-    <!-- Include the CSS & JS.. (This could be direct from the package or bundled) -->
-    <link rel="stylesheet" href="{{static_url('css')}}/lite-yt-embed.css" />
-
-
-    <!--    google-->
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-Z5HKRTH4KW"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-
-        function gtag() {
-            dataLayer.push(arguments);
-        }
-        gtag('js', new Date());
-
-        gtag('config', 'G-Z5HKRTH4KW');
-
-    </script>
-
-
-    <!--    favicon-->
-    <meta name="msapplication-square70x70logo" content="/site-tile-70x70.png">
-    <meta name="msapplication-square150x150logo" content="/site-tile-150x150.png">
-    <meta name="msapplication-wide310x150logo" content="/site-tile-310x150.png">
-    <meta name="msapplication-square310x310logo" content="/site-tile-310x310.png">
-    <meta name="msapplication-TileColor" content="#0078d7">
-    <link rel="shortcut icon" type="image/vnd.microsoft.icon" href="{{static_url('image/favicons')}}/favicon.ico">
-    <link rel="icon" type="image/vnd.microsoft.icon" href="{{static_url('image/favicons')}}/favicon.ico">
-    <link rel="apple-touch-icon" sizes="57x57" href="{{static_url('image/favicons')}}/apple-touch-icon-57x57.png">
-    <link rel="apple-touch-icon" sizes="60x60" href="{{static_url('image/favicons')}}/apple-touch-icon-60x60.png">
-    <link rel="apple-touch-icon" sizes="72x72" href="{{static_url('image/favicons')}}/apple-touch-icon-72x72.png">
-    <link rel="apple-touch-icon" sizes="76x76" href="{{static_url('image/favicons')}}/apple-touch-icon-76x76.png">
-    <link rel="apple-touch-icon" sizes="114x114" href="{{static_url('image/favicons')}}/apple-touch-icon-114x114.png">
-    <link rel="apple-touch-icon" sizes="120x120" href="{{static_url('image/favicons')}}/apple-touch-icon-120x120.png">
-    <link rel="apple-touch-icon" sizes="144x144" href="{{static_url('image/favicons')}}/apple-touch-icon-144x144.png">
-    <link rel="apple-touch-icon" sizes="152x152" href="{{static_url('image/favicons')}}/apple-touch-icon-152x152.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="{{static_url('image/favicons')}}/apple-touch-icon-180x180.png">
-    <link rel="icon" type="image/png" sizes="36x36" href="{{static_url('image/favicons')}}/android-chrome-36x36.png">
-    <link rel="icon" type="image/png" sizes="48x48" href="{{static_url('image/favicons')}}/android-chrome-48x48.png">
-    <link rel="icon" type="image/png" sizes="72x72" href="{{static_url('image/favicons')}}/android-chrome-72x72.png">
-    <link rel="icon" type="image/png" sizes="96x96" href="{{static_url('image/favicons')}}/android-chrome-96x96.png">
-    <link rel="icon" type="image/png" sizes="128x128" href="{{static_url('image/favicons')}}/android-chrome-128x128.png">
-    <link rel="icon" type="image/png" sizes="144x144" href="{{static_url('image/favicons')}}/android-chrome-144x144.png">
-    <link rel="icon" type="image/png" sizes="152x152" href="{{static_url('image/favicons')}}/android-chrome-152x152.png">
-    <link rel="icon" type="image/png" sizes="192x192" href="{{static_url('image/favicons')}}/android-chrome-192x192.png">
-    <link rel="icon" type="image/png" sizes="256x256" href="{{static_url('image/favicons')}}/android-chrome-256x256.png">
-    <link rel="icon" type="image/png" sizes="384x384" href="{{static_url('image/favicons')}}/android-chrome-384x384.png">
-    <link rel="icon" type="image/png" sizes="512x512" href="{{static_url('image/favicons')}}/android-chrome-512x512.png">
-    <link rel="icon" type="image/png" sizes="36x36" href="{{static_url('image/favicons')}}/icon-36x36.png">
-    <link rel="icon" type="image/png" sizes="48x48" href="{{static_url('image/favicons')}}/icon-48x48.png">
-    <link rel="icon" type="image/png" sizes="72x72" href="{{static_url('image/favicons')}}/icon-72x72.png">
-    <link rel="icon" type="image/png" sizes="96x96" href="{{static_url('image/favicons')}}/icon-96x96.png">
-    <link rel="icon" type="image/png" sizes="128x128" href="{{static_url('image/favicons')}}/icon-128x128.png">
-    <link rel="icon" type="image/png" sizes="144x144" href="{{static_url('image/favicons')}}/icon-144x144.png">
-    <link rel="icon" type="image/png" sizes="152x152" href="{{static_url('image/favicons')}}/icon-152x152.png">
-    <link rel="icon" type="image/png" sizes="160x160" href="{{static_url('image/favicons')}}/icon-160x160.png">
-    <link rel="icon" type="image/png" sizes="192x192" href="{{static_url('image/favicons')}}/icon-192x192.png">
-    <link rel="icon" type="image/png" sizes="196x196" href="{{static_url('image/favicons')}}/icon-196x196.png">
-    <link rel="icon" type="image/png" sizes="256x256" href="{{static_url('image/favicons')}}/icon-256x256.png">
-    <link rel="icon" type="image/png" sizes="384x384" href="{{static_url('image/favicons')}}/icon-384x384.png">
-    <link rel="icon" type="image/png" sizes="512x512" href="{{static_url('image/favicons')}}/icon-512x512.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="{{static_url('image/favicons')}}/icon-16x16.png">
-    <link rel="icon" type="image/png" sizes="24x24" href="{{static_url('image/favicons')}}/icon-24x24.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="{{static_url('image/favicons')}}/icon-32x32.png">
-    <link rel="manifest" href="{{static_url('image/favicons')}}/manifest.json">
-
+    {% include module_common_meta.html %}
 
     <!--    メインCSS読み込み-->
     <link rel="stylesheet" type="text/css" href="{{static_url('css')}}/style.css?t={{str(time.time())}}">
-    <!--    youtube埋め込み用スクリプト読み込み-->
-    <script src="https://www.youtube.com/iframe_api"></script>
-
 </head>
 
 <body>
 
-    <nav class="amber">
-        <div class="nav-wrapper">
-            <p class="brand-logo title center" onselectstart="return false;">Leona'sPlayList</p>
-            <ul class="left expand-search-area" onclick="expandSearch();">
-                <form method="get">
-                    <div class="input-field">
-                        <input id="search" onBlur="hideSearch();" name="search" type="search" autocomplete="off">
-                        <label class="label-icon" for="search">
-                            <i class="material-icons">search</i>
-                        </label>
-                    </div>
-                </form>
-            </ul>
-            <ul class="right show-always">
-                <li><a class="dropdown-trigger" data-target="dropdown">MENU<i class="material-icons right">arrow_drop_down</i></a></li>
-            </ul>
-        </div>
-    </nav>
+    {% include module_menu.html %}
+    <div class="content">
 
-    <ul id='dropdown' class='dropdown-content'>
-        <li>
-            <a href="/"><i class="material-icons">home</i>HOME</a>
-        </li>
-        <li>
-            <a href="/?favorite=true"><i class="material-icons">star</i>お気に入り</a>
-        </li>
-        <li>
-            <a href="/channel-videos"><i class="material-icons">event</i>公式配信一覧</a>
-        </li>
-
-        <li>
-            {% if login_flg %}
-            <a href="/logout">
-                <i class="material-icons">exit_to_app</i>ログアウト
-            </a>
-            {% else %}
-            <a href="/login">
-                <i class="material-icons">person
-                </i>ログイン
-            </a>
-            {% end %}
-        </li>
-        <li>
-            <a uk-toggle="target: #copyright-modal"><i class="material-icons">web</i>ページ説明</a>
-        </li>
-    </ul>
     <div class="collection list-section">
         <div class="row">
             <div class="col s12">
@@ -167,70 +37,10 @@
 
         </div>
     </div>
-    <div id="copyright-modal" uk-modal>
-        <div class="uk-modal-dialog uk-modal-body uk-light uk-background-secondary uk-padding">
-            <h4 class="uk-modal-title">このWEBページについて</h4>
-            <p>本WEBページは獅子神レオナさんのYoutubeでの歌枠配信歌ってみたなどの動画を横断検索することができるファンサイトです。</p>
-            <p>本WEBページのコンテンツはYouTubeの埋め込み機能を利用しており、転載、切り抜き等には当たりません。</p>
-            <p>再生された動画が収益化されている場合、YouTubeの規約に準拠して各権利者へ収益が配分されます。</p>
-            <p>また、すべてのコンテンツの著作権は各動画の配信元に準拠します。</p>
-            <p>製作者に著作権侵害の意図は一切ございません。各種お問い合わせに関しましては、以下メールアドレスまでご連絡願います。</p>
-            <p>hiroya@t0d0.jp</p>
-            <h5 class="uk-modal-title">Special Thanks</h5>
-            <p>イラスト提供：佑希さん</p>
-            <p>イラスト提供：柊さん</p>
-            <p>データ登録：Ayuの塩焼きさん</p>
-            <p>参考情報：コメント欄にタイムスタンプを貼ってくださっている方々</p>
-            <h5 class="uk-modal-title">Open Source Library</h5>
-            <pre class="copyright-pre">
-Name                           Version    License
-Babel                          2.10.3     BSD License
-Jinja2                         3.1.2      BSD License
-MarkupSafe                     2.1.1      BSD License
-Pygments                       2.12.0     BSD License
-Sphinx                         5.1.1      BSD License
-alabaster                      0.7.12     BSD License
-certifi                        2022.6.15  Mozilla Public License 2.0 (MPL 2.0)
-charset-normalizer             2.1.0      MIT License
-click                          8.1.3      BSD License
-colorama                       0.4.5      BSD License
-groundwork-sphinx-theme        1.1.1      MIT License
-idna                           3.3        BSD License
-imagesize                      1.4.1      MIT License
-livereload                     2.6.3      BSD License
-lpl                            0.2        MIT
-mccabe                         0.7.0      MIT License
-motor                          3.0.0      Apache Software License
-packaging                      21.3       Apache Software License; BSD License
-prettytable                    3.3.0      BSD License
-pycodestyle                    2.9.0      MIT License
-pyflakes                       2.5.0      MIT License
-pymongo                        4.2.0      Apache Software License
-pyparsing                      3.0.9      MIT License
-pytz                           2022.1     MIT License
-requests                       2.28.1     Apache Software License
-six                            1.16.0     MIT License
-snowballstemmer                2.2.0      BSD License
-sphinx-autobuild               2021.3.14  MIT License
-sphinxcontrib-applehelp        1.0.2      BSD License
-sphinxcontrib-devhelp          1.0.2      BSD License
-sphinxcontrib-htmlhelp         2.0.0      BSD License
-sphinxcontrib-jsmath           1.0.1      BSD License
-sphinxcontrib-qthelp           1.0.3      BSD License
-sphinxcontrib-serializinghtml  1.1.5      BSD License
-termcolor                      1.1.0      MIT License
-tornado                        6.2        Apache Software License
-urllib3                        1.26.11    MIT License
-wcwidth                        0.2.5      MIT License
-docutils                       0.19       BSD License; GNU General Public License (GPL); Public Domain; Python Software Foundation License
-flake8                         5.0.3      MIT License
-UIkit                          3.3.3      MIT License
-materialize                    1.0.0      MIT License
-iconify                        2.2.1      Apache 2.0 license
-lite-youtube-embed             0.2.0      Apache 2.0 license
-        </pre>
-        </div>
+            {% include module_about.html %}
+
     </div>
+
 
     <!--    Materialize JS読み込み-->
     <script src="{{static_url('js')}}/materialize.min.js"></script>

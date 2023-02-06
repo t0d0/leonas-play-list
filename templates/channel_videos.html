@@ -1,0 +1,71 @@
+{% import time %}
+{% from dateutil import parser %}
+{% from pytz import timezone %}
+{% import tornado %}
+
+<html>
+
+<head>
+    <title>Leona'sPlayList</title>
+    {% include module_common_meta.html %}
+
+    <!--    メインCSS読み込み-->
+    <link rel="stylesheet" type="text/css" href="{{static_url('css')}}/style.css?t={{str(time.time())}}">
+
+</head>
+
+<body>
+
+    {% include module_menu.html %}
+    <div class="content">
+
+    <div class="row">
+        <div class="col s12">
+
+            <ul class="collapsible">
+                {% for video in channel_video_list %}
+                <li>
+                    <div class="collapsible-header {{ "gray-collapsible" if not registrated_video_dict[video["id"]["videoId"]] else ""}}">
+                        {% if not registrated_video_dict[video["id"]["videoId"]] %}
+                        <a style="color: black" href="https://www.youtube.com/watch?v={{video["id"]["videoId"]}}">
+                            {% end %}
+                            <img src="{{ video["snippet"]["thumbnails"]["default"]["url"] }}" loading="lazy">
+                            {{ "{0:%Y/%m/%d(%a) %H:%M投稿}".format(parser.parse(video['snippet']['publishedAt']).astimezone(timezone("Asia/Tokyo"))) }}
+                            {{ tornado.escape.xhtml_unescape(video['snippet']['title'] )}}
+                            {% if not registrated_video_dict[video["id"]["videoId"]] %}
+                        </a>
+                        {% end %}
+                    </div>
+                    {% if registrated_video_dict[video["id"]["videoId"]] %}
+                    <div class="collapsible-body">
+                        <ul class="collection">
+
+                            {% for inner_video in registrated_video_dict[video["id"]["videoId"]] %}
+                            <li class="collection-item">
+                                <a href="https://www.youtube.com/watch?v={{inner_video['video_id']}}&t={{inner_video['time']}}">
+                                    <span>{{ datetime.timedelta(seconds=inner_video["time"])}}</span>
+                                    <span>{{ inner_video["title"] }}</span>
+                                </a>
+                            </li>
+                            {% end %}
+                        </ul>
+                    </div>
+                    {% end %}
+                </li>
+                {% end %}
+
+            </ul>
+        </div>
+    </div>
+    </div>
+    {% include module_about.html %}
+
+    <!--    Materialize JS読み込み-->
+    <script src="{{static_url('js')}}/materialize.min.js"></script>
+    <!--    メインスクリプト読み込み-->
+    <script src="{{static_url('js')}}/channel_videos.js?t={{str(time.time())}}"></script>
+
+
+</body>
+
+</html>

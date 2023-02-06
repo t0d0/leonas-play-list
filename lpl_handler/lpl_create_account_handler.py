@@ -12,7 +12,7 @@ class LPLCreateAccountHandler(tornado.web.RequestHandler):
         user_db = self.application.user_db
         password = util.get_hashed_password(self.get_argument('password'), self.application.salt)
         e_mail = self.get_argument('e-mail')
-        user_data = user_db.ContentDataFormat(
+        user_data = user_db.DataFormat(
             e_mail=e_mail,
             password=password,
             _id=e_mail

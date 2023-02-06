@@ -1,0 +1,19 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+tornado = "*"
+python-dateutil = "*"
+apiclient = "*"
+google-api-python-client = "*"
+pymongo = "*"
+motor = "*"
+pytz = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.11"
+python_full_version = "3.11.1"

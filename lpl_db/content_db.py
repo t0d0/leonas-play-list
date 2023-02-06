@@ -87,7 +87,7 @@ class ContentDb(BaseDb):
             regex = r"^" + r'\Q' + search + r'\E' + "$"
             options = ""
 
-        print(without_target)
+        # print(without_target)
 
         if without_target is None:
             detail_query = {
@@ -128,7 +128,7 @@ class ContentDb(BaseDb):
         regex = r"^\Q" + artist + r"\E$"
         options = ""
 
-        print(without_target)
+        # print(without_target)
         if without_target is None:
             detail_query = {
                 "artist": {
@@ -196,9 +196,15 @@ class ContentDb(BaseDb):
                                       ]).to_list(None)
 
     async def get_data_by_video_id(self, video_id):
-
         detail_query = {"video_id": video_id}
+        query = self.__build_get_simple_content_query(detail_query, limit=100,sort={"time":1})
+        query_result = self.lpl_co.aggregate(query)
+        result = await self.__result_to_model_list(query_result)
+        return result
 
+    async def get_data_by_video_ids(self, video_ids):
+
+        detail_query = {"_id": {"$in": video_ids}}
         query = self.__build_get_simple_content_query(detail_query, limit=100,sort={"time":1})
         query_result = self.lpl_co.aggregate(query)
         result = await self.__result_to_model_list(query_result)
@@ -289,7 +295,6 @@ class ContentDb(BaseDb):
             query.append({"$limit": limit})
         if sort is not None:
             query.append({"$sort": sort})
-        print(query)
         return query
 
     async def __result_to_model_list(self, result):

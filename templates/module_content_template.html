@@ -1,0 +1,47 @@
+<template id="content-template">
+    <div class="col s12 m3 delay-time02 fadeUp content-card" id="content-root">
+        <div class="card hoverable">
+            <div class="card-image">
+                <lite-youtube id="youtube" videoid="" params=""></lite-youtube>
+
+            </div>
+            <div class="card-content">
+                <span class="card-title music-title" id='title'>曲名</span>
+                <p>配信日：<span id="published-at"></span></p>
+                <a id="artist-btn" href="">
+                    <p id="artist"></p>
+                </a>
+                <a id="youtubeapp-btn" href="https://www.youtube.com/watch?v=">
+                    <p>Youtubeで見る</p>
+                </a>
+            </div>
+            <div class="card-action icons center-align" onselectstart="return(false);">
+                <a id="favorite-btn" class="icon" hidden>
+                    <i class="material-icons">star_border</i>
+                </a>
+                <a id="unfavorite-btn" hidden>
+                    <i class="material-icons">star</i>
+                </a>
+                <a id="local-favorite-btn" class="icon" hidden>
+                    <i class="material-icons">star_border</i>
+                </a>
+                <a id="local-unfavorite-btn" class="icon" hidden>
+                    <i class="material-icons">star</i>
+                </a>
+                <a id="share" href="" data-show-count="false" class="icon material-icons">
+                    <span class="iconify" data-icon="mdi:twitter"></span>
+                </a>
+                <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+                <a id="search-btn" class="icon" href="">
+                    <i class="material-icons">search</i>
+                </a>
+                <a id="edit-btn" uk-toggle="target: #edit-modal" type="button" class="icon">
+                    <i class="material-icons">edit</i>
+                </a>
+                <a id="delete-btn" uk-toggle="target: #delete-confirm-modal" type="button" class="icon">
+                    <i class="material-icons">delete</i>
+                </a>
+            </div>
+        </div>
+    </div>
+</template>
