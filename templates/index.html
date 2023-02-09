@@ -27,16 +27,16 @@
 
 {% module xsrf_form_html() %}
 <input type="hidden" value="{{ login_flg }}" id="login-flg"/>
-<div class="navbar-fixed">
+<div class="navbar-fixed" id="controller">
     <nav class="amber play-controller">
-        <div class="playing-title">
-            曲名がここに出る
+        <div id="current-playing-title" class="playing-title">
+
         </div>
         <div id="control-ui">
             <i class="material-icons">play_arrow</i>
             <i class="material-icons">volume_up</i>
             <div class="slider-zone">
-                <input type="range" oninput="onChangeVolumeSlider(this.value);" id="volume-slider" min="0" max="100"/>
+                <input name="volume" type="range" oninput="onChangeVolumeSlider(this.value);" id="volume-slider" min="0" max="100"/>
             </div>
         </div>
 

@@ -2,33 +2,33 @@
  * A lightweight youtube embed. Still should feel the same to the user, just MUCH faster to initialize and paint.
  *
  * Thx to these as the inspiration
- *   https://storage.googleapis.com/amp-vs-non-amp/youtube-lazy.html
- *   https://autoplay-youtube-player.glitch.me/
+ * https://storage.googleapis.com/amp-vs-non-amp/youtube-lazy.html
+ * https://autoplay-youtube-player.glitch.me/
  *
  * Once built it, I also found these:
- *   https://github.com/ampproject/amphtml/blob/master/extensions/amp-youtube (👍👍)
- *   https://github.com/Daugilas/lazyYT
- *   https://github.com/vb/lazyframe
+ * https://github.com/ampproject/amphtml/blob/master/extensions/amp-youtube (👍👍)
+ * https://github.com/Daugilas/lazyYT
+ * https://github.com/vb/lazyframe
  */
 class LiteYTEmbed extends HTMLElement {
+
     connectedCallback() {
         this.videoId = this.getAttribute('videoid');
 
         let playBtnEl = this.querySelector('.lty-playbtn');
         // A label for the button takes priority over a [playlabel] attribute on the custom-element
         this.playLabel = (playBtnEl && playBtnEl.textContent.trim()) || this.getAttribute('playlabel') || 'Play';
-
         /**
-         * Lo, the youtube placeholder image!  (aka the thumbnail, poster image, etc)
+         * Lo, the youtube placeholder image! (aka the thumbnail, poster image, etc)
          *
          * See https://github.com/paulirish/lite-youtube-embed/blob/master/youtube-thumbnail-urls.md
          *
          * TODO: Do the sddefault->hqdefault fallback
-         *       - When doing this, apply referrerpolicy (https://github.com/ampproject/amphtml/pull/3940)
+         * - When doing this, apply referrerpolicy (https://github.com/ampproject/amphtml/pull/3940)
          * TODO: Consider using webp if supported, falling back to jpg
          */
         if (!this.style.backgroundImage) {
-          this.style.backgroundImage = `url("https://i.ytimg.com/vi/${this.videoId}/hqdefault.jpg")`;
+            this.style.backgroundImage = `url("https://i.ytimg.com/vi/${this.videoId}/hqdefault.jpg")`;
         }
 
         // Set up play button, and its visually hidden label
@@ -46,11 +46,13 @@ class LiteYTEmbed extends HTMLElement {
         }
 
         // On hover (or tap), warm up the TCP connections we're (likely) about to use.
-        this.addEventListener('pointerover', LiteYTEmbed.warmConnections, {once: true});
+        this.addEventListener('pointerover', LiteYTEmbed.warmConnections, {
+            once: true
+        });
 
         // Once the user clicks, add the real iframe and drop our play button
         // TODO: In the future we could be like amp-youtube and silently swap in the iframe during idle time
-        //   We'd want to only do this for in-viewport or near-viewport ones: https://github.com/ampproject/amphtml/pull/5003
+        // We'd want to only do this for in-viewport or near-viewport ones: https://github.com/ampproject/amphtml/pull/5003
         this.addEventListener('click', this.addIframe);
     }
 
@@ -59,7 +61,8 @@ class LiteYTEmbed extends HTMLElement {
     // }
 
     /**
-     * Add a <link rel={preload | preconnect} ...> to the head
+     * Add a
+     <link rel={preload | preconnect} ...> to the head
      */
     static addPrefetch(kind, url, as) {
         const linkEl = document.createElement('link');
@@ -74,10 +77,11 @@ class LiteYTEmbed extends HTMLElement {
     /**
      * Begin pre-connecting to warm up the iframe load
      * Since the embed's network requests load within its iframe,
-     *   preload/prefetch'ing them outside the iframe will only cause double-downloads.
+     * preload/prefetch'ing them outside the iframe will only cause double-downloads.
      * So, the best we can do is warm up a few connections to origins that are in the critical path.
      *
-     * Maybe `<link rel=preload as=document>` would work, but it's unsupported: http://crbug.com/593267
+     * Maybe `
+     <link rel=preload as=document>` would work, but it's unsupported: http://crbug.com/593267
      * But TBH, I don't think it'll happen soon with Site Isolation and split caches adding serious complexity.
      */
     static warmConnections() {
@@ -96,28 +100,63 @@ class LiteYTEmbed extends HTMLElement {
     }
 
     addIframe(e) {
+        const params = Object.fromEntries((new URLSearchParams(this.getAttribute('params'))));
         if (this.classList.contains('lyt-activated')) return;
-        e.preventDefault();
         this.classList.add('lyt-activated');
+        this.removeAttribute("style");
+        let tag = document.createElement('script');
 
-        const params = new URLSearchParams(this.getAttribute('params') || []);
-        params.append('autoplay', '1');
+        tag.src = "https://www.youtube.com/iframe_api";
+        let firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
-        const iframeEl = document.createElement('iframe');
-        iframeEl.width = 560;
-        iframeEl.height = 315;
-        // No encoding necessary as [title] is safe. https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html#:~:text=Safe%20HTML%20Attributes%20include
-        iframeEl.title = this.playLabel;
-        iframeEl.allow = 'accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture';
-        iframeEl.allowFullscreen = true;
-        // AFAIK, the encoding here isn't necessary for XSS, but we'll do it only because this is a URL
-        // https://stackoverflow.com/q/64959723/89484
-        iframeEl.src = `https://www.youtube-nocookie.com/embed/${encodeURIComponent(this.videoId)}?${params.toString()}`;
-        this.append(iframeEl);
 
-        // Set focus for a11y
-        iframeEl.focus();
+        const divEl = document.createElement('div');
+        divEl.id = `player-${this.getAttribute("id")}`;
+        this.append(divEl);
+        this.player = new YT.Player(
+            `player-${this.getAttribute("id")}`, {
+                width: '640',
+                /* 動画プレーヤーの幅 */
+                height: '360',
+                /* 動画プレーヤーの高さ */
+                videoId: encodeURIComponent(this.videoId),
+                /* YouTube動画ID */
+                events: {
+                    /* イベント */
+                    "onReady": onPlayerReady /* プレーヤの準備完了時 */
+                }
+            }
+        );
+
+        function onPlayerReady(event) {
+            event.target.playVideo();
+            event.target.seekTo(params.start);
+            event.target.setVolume(getController('controller').querySelector('[name=volume]').value);
+        }
+
+        return;
+    }
+
+    setVolume(volume) {
+        console.log(this.player.setVolume(volume));
+    }
+
+    start() {
+        console.log('start')
+        this.player.playVideo();
+    }
+
+    stop() {
+        console.log('stop')
+        this.player.pauseVideo();
     }
 }
+
+function getController(controller) {
+    return document.getElementById(controller);
+}
+
+
 // Register custom element
 customElements.define('lite-youtube', LiteYTEmbed);

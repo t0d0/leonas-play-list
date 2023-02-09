@@ -3,7 +3,7 @@ let renderFlg = true;
 let renderedContentValue = 0;
 let loadedEmbededYTValue = 0;
 isLogin = document.getElementById('login-flg').value === 'True';
-
+let ActiveLiteYoutube = undefined;
 async function ajax(url = '', method = '', data = {}) {
 
     const response = await fetch(url, {
@@ -23,6 +23,22 @@ async function ajax(url = '', method = '', data = {}) {
     })
     return response.json();
 }
+//お試し中---------------------------------------------------------
+//       var tag = document.createElement('script');
+//
+//       tag.src = "https://www.youtube.com/iframe_api";
+//       var firstScriptTag = document.getElementsByTagName('script')[0];
+//       firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+//
+//       // 3. This function creates an <iframe> (and YouTube player)
+//       //    after the API code downloads.
+//       var player;
+//       function onYouTubeIframeAPIReady() {
+//           console.log("funger");
+//
+//       }
+//---------------------------------------------------------
+
 
 
 function changeDeleteTarget(id) {
@@ -144,8 +160,12 @@ function setTemplateValue(template, data) {
     dom.querySelector('#published-at').textContent = data['published_at'] == "null" ? "未登録" : formatDate(new Date(data['published_at']));
     dom.querySelector('#artist-btn').setAttribute('href', `/?artist=${encodeURIComponent(data['artist'] == ""?"unknown":data['artist'])}`);
 
-    dom.querySelector('#youtube').setAttribute("videoid", data['video_id']);
-    dom.querySelector('#youtube').setAttribute("params", `controls=0&start=${data['time']}&modestbranding=2&rel=0&enablejsapi=1`);
+    dom.querySelector('.lite-youtube').setAttribute("videoid", data['video_id']);
+    dom.querySelector('.lite-youtube').setAttribute("id", `lt-${data['_id']}`);
+
+    // dom.querySelector('#youtube').setAttribute("onclick", "onClickVideo(this)");
+    dom.querySelector('.lite-youtube').setAttribute("params", `controls=0&start=${data['time']}&modestbranding=2&rel=0&enablejsapi=1`);
+    // dom.querySelector('.lite-youtube').setAttribute("controller", 'controller');
     dom.querySelector('#youtubeapp-btn').setAttribute("href", `https://www.youtube.com/watch?v=${data['video_id']}&t=${data['time']}&rel=0&playsinline=1&`)
     dom.querySelector('#search-btn').setAttribute("href", `/?search=${encodeURIComponent(data['title'])}&perfect=true`);
     if (isLogin) {
@@ -177,7 +197,22 @@ function setTemplateValue(template, data) {
                     )`);
     return dom;
 }
-
+document.addEventListener('click', function (e) {
+    console.log("何かをクリック");
+    console.log(e.target.tagName.toLowerCase());
+    if((e.target.tagName.toLowerCase() === 'lite-youtube')
+        ||(e.target.classList.contains('lty-playbtn'))) {
+        if (ActiveLiteYoutube) {
+            ActiveLiteYoutube.stop();
+        }
+        if (e.target.tagName.toLowerCase() === 'lite-youtube') {
+            ActiveLiteYoutube = e.target.parentElement.querySelector('lite-youtube');
+        } else if (e.target.classList.contains('lty-playbtn')) {
+            ActiveLiteYoutube = e.target.parentElement;
+        }
+        document.getElementById('current-playing-title').innerText=ActiveLiteYoutube.parentElement.parentElement.querySelector('#title').innerText;
+    }
+});
 function renderContent(data) {
     for (i of data) {
         if (i != undefined && (i['title'] != undefined)) {
@@ -279,6 +314,7 @@ document.addEventListener('DOMContentLoaded', settingSliderParams);
 window.addEventListener('resize', settingSliderParams);
 
 
+
 document.addEventListener('DOMContentLoaded', function () {
     const options = {
         data : {}
@@ -352,7 +388,8 @@ function onChangeSearch(event){
 }
 
 function onChangeVolumeSlider(event){
-    console.log(event);
+    // console.log(event)
+    ActiveLiteYoutube.setVolume(event)
 }
 getNextContent();
 
