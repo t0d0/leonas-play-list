@@ -23,23 +23,6 @@ async function ajax(url = '', method = '', data = {}) {
     })
     return response.json();
 }
-//お試し中---------------------------------------------------------
-//       var tag = document.createElement('script');
-//
-//       tag.src = "https://www.youtube.com/iframe_api";
-//       var firstScriptTag = document.getElementsByTagName('script')[0];
-//       firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-//
-//       // 3. This function creates an <iframe> (and YouTube player)
-//       //    after the API code downloads.
-//       var player;
-//       function onYouTubeIframeAPIReady() {
-//           console.log("funger");
-//
-//       }
-//---------------------------------------------------------
-
-
 
 function changeDeleteTarget(id) {
     document.getElementById('delete-target').value = id;
@@ -340,7 +323,7 @@ document.getElementById("search").addEventListener('input', onChangeSearch);
 
 document.addEventListener('DOMContentLoaded', function() {
     let options = {data: {"autocomplete":null,},
-    onAutocomplete:(a)=>console.log(a+"hoge")};
+    onAutocomplete:(a)=>console.log(a)};
     const elems = document.querySelectorAll('#search');
     const instances = M.Autocomplete.init(elems, options);
 
@@ -349,7 +332,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 function onChangeSearch(event){
-    console.log(event.target.value);
+    // console.log(event.target.value);
     let data = {
         search: event.target.value,
         '_xsrf': getCookie("_xsrf")
@@ -357,17 +340,16 @@ function onChangeSearch(event){
     ajax('api/search-suggestion', 'QUERY', data).then(data => {
         // document.getElementById(deleteContentform.target.value).remove();
         // UIkit.modal(document.getElementById("delete-confirm-modal")).hide();
-        console.log(data);
+        // console.log(data);
 
-        let hoge = data.reduce(function(target, key, index) {
+        let updatedata = data.reduce(function(target, key, index) {
           target[key] = null;
           return target;
         }, {})
         const elem = document.getElementById('search');
         const instance = M.Autocomplete.getInstance(elem);
 
-        // console.log(hoge);
-        instance.updateData(hoge);
+        instance.updateData(updatedata);
     });
 
 }
@@ -392,13 +374,13 @@ function onClickMute(event){
 }
 
 function onChangeVolumeSlider(event){
-    // console.log(event)
     document.getElementById('mute').innerText = 'volume_up';
     LiteYTEmbed.ActiveLiteYoutube.player.unMute();
     LiteYTEmbed.ActiveLiteYoutube.setVolume(event);
     localStorage.setItem('volume', event);
 }
 document.getElementById('volume-slider').setAttribute('value',value=localStorage.getItem('volume'));
+
 LiteYTEmbed.onPlayFunction = ()=>{
     document.getElementById('current-playing-title').innerText =LiteYTEmbed.ActiveLiteYoutube.parentElement.parentElement.querySelector('#title').innerText;
     document.getElementById('play-status').innerText = 'pause';

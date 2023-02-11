@@ -15,6 +15,7 @@ class LiteYTEmbed extends HTMLElement {
     static CurrentTitle = undefined;
     static onPlayFunction = undefined;
     static onPauseFunction = undefined;
+    static hasNextAction = false;
     connectedCallback() {
         this.videoId = this.getAttribute('videoid');
         let playBtnEl = this.querySelector('.lty-playbtn');
@@ -123,50 +124,37 @@ class LiteYTEmbed extends HTMLElement {
 
                 videoId: encodeURIComponent(this.videoId),
 
-                playerVars: {'autoplay': 1, 'controls': 0},
+                playerVars: {
+                    'autoplay': 1,
+                    'controls': 0
+                },
 
                 events: {
                     /* イベント */
                     "onReady": onPlayerReady,
-                    "onStateChange":(event) => {
+                    "onStateChange": (event) => {
+
                         if (event.data == YT.PlayerState.PLAYING) {
                             event.target.setVolume(getController('controller').querySelector('[name=volume]').value);
                             if (LiteYTEmbed.ActiveLiteYoutube &&
-                                LiteYTEmbed.ActiveLiteYoutube.getAttribute('id') !== this.getAttribute('id')){
+                                LiteYTEmbed.ActiveLiteYoutube.getAttribute('id') !== this.getAttribute('id')) {LiteYTEmbed.hasNextAction = true;
                                 LiteYTEmbed.ActiveLiteYoutube.stop();
                             }
                             LiteYTEmbed.ActiveLiteYoutube = this;
-                            if (LiteYTEmbed.onPlayFunction){
-                                LiteYTEmbed.onPlayFunction();
+                            if (LiteYTEmbed.onPlayFunction) {
+                                setTimeout(LiteYTEmbed.onPlayFunction, 100);
                             }
-
                         }
                         if (event.data == YT.PlayerState.PAUSED) {
-                            if (LiteYTEmbed.onPauseFunction){
-                                LiteYTEmbed.onPauseFunction();
+                            if (LiteYTEmbed.onPauseFunction) {
+                                    LiteYTEmbed.onPauseFunction();
                             }
                         }
                     }
                 }
             }
         );
-      // function onPlayerStateChange(event) {
-      //     if (event.data == YT.PlayerState.PLAYING){
-      //         console.log("event.data == YT.PlayerState.PLAYING");
-      //         console.log(this);
-      //         console.log(LiteYTEmbed.ActiveLiteYoutube);
-      //         console.log(event !== LiteYTEmbed.ActiveLiteYoutube);
-      //     }
-      //
-      //   if (event.data == YT.PlayerState.PLAYING) {
-      //       LiteYTEmbed.ActiveLiteYoutube.stop();
-      //       LiteYTEmbed.ActiveLiteYoutube = event;
-      //       // console.log("停止された");
-      //   }
-      // }
-      function stopVideo() {
-        // player.stopVideo();
-      }
+
         function onPlayerReady(event) {
             event.target.playVideo();
             event.target.seekTo(params.start);
@@ -181,12 +169,10 @@ class LiteYTEmbed extends HTMLElement {
     }
 
     start() {
-        console.log('start')
         this.player.playVideo();
     }
 
     stop() {
-        console.log('stop')
         this.player.pauseVideo();
     }
 }
