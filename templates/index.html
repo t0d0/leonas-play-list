@@ -33,10 +33,10 @@
 
         </div>
         <div id="control-ui">
-            <i class="material-icons">play_arrow</i>
-            <i class="material-icons">volume_up</i>
+            <i id='play-status' class="material-icons" onclick="onClickPlayStatus(this.innerText)" >play_arrow</i>
+            <i id='mute' class="material-icons" onclick="onClickMute(this.innerText)">volume_up</i>
             <div class="slider-zone">
-                <input name="volume" type="range" oninput="onChangeVolumeSlider(this.value);" id="volume-slider" min="0" max="100"/>
+                <input name="volume" type="range" oninput="onChangeVolumeSlider(this.value);" id="volume-slider" min="0" max="100" />
             </div>
         </div>
 

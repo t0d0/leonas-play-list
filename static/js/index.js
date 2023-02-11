@@ -197,22 +197,7 @@ function setTemplateValue(template, data) {
                     )`);
     return dom;
 }
-document.addEventListener('click', function (e) {
-    console.log("何かをクリック");
-    console.log(e.target.tagName.toLowerCase());
-    if((e.target.tagName.toLowerCase() === 'lite-youtube')
-        ||(e.target.classList.contains('lty-playbtn'))) {
-        if (ActiveLiteYoutube) {
-            ActiveLiteYoutube.stop();
-        }
-        if (e.target.tagName.toLowerCase() === 'lite-youtube') {
-            ActiveLiteYoutube = e.target.parentElement.querySelector('lite-youtube');
-        } else if (e.target.classList.contains('lty-playbtn')) {
-            ActiveLiteYoutube = e.target.parentElement;
-        }
-        document.getElementById('current-playing-title').innerText=ActiveLiteYoutube.parentElement.parentElement.querySelector('#title').innerText;
-    }
-});
+
 function renderContent(data) {
     for (i of data) {
         if (i != undefined && (i['title'] != undefined)) {
@@ -386,10 +371,41 @@ function onChangeSearch(event){
     });
 
 }
+function onClickPlayStatus(event){
+    if(event === 'pause'){
+        LiteYTEmbed.ActiveLiteYoutube.stop();
+    }
+    if (event === 'play_arrow'){
+        LiteYTEmbed.ActiveLiteYoutube.start();
+    }
+}
+function onClickMute(event){
+    if(event === 'volume_up'){
+        document.getElementById('mute').innerText = 'volume_off';
+        LiteYTEmbed.ActiveLiteYoutube.player.mute();
+    }
+    if(event === 'volume_off'){
+        document.getElementById('mute').innerText = 'volume_up';
+        LiteYTEmbed.ActiveLiteYoutube.player.unMute();
+    }
+
+}
 
 function onChangeVolumeSlider(event){
     // console.log(event)
-    ActiveLiteYoutube.setVolume(event)
+    document.getElementById('mute').innerText = 'volume_up';
+    LiteYTEmbed.ActiveLiteYoutube.player.unMute();
+    LiteYTEmbed.ActiveLiteYoutube.setVolume(event);
+    localStorage.setItem('volume', event);
 }
+document.getElementById('volume-slider').setAttribute('value',value=localStorage.getItem('volume'));
+LiteYTEmbed.onPlayFunction = ()=>{
+    document.getElementById('current-playing-title').innerText =LiteYTEmbed.ActiveLiteYoutube.parentElement.parentElement.querySelector('#title').innerText;
+    document.getElementById('play-status').innerText = 'pause';
+}
+LiteYTEmbed.onPauseFunction = ()=>{
+    document.getElementById('play-status').innerText = 'play_arrow';
+}
+LiteYTEmbed.CurrentTitle = document.getElementById('current-playing-title');
 getNextContent();
 

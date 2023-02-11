@@ -11,10 +11,12 @@
  * https://github.com/vb/lazyframe
  */
 class LiteYTEmbed extends HTMLElement {
-
+    static ActiveLiteYoutube = undefined;
+    static CurrentTitle = undefined;
+    static onPlayFunction = undefined;
+    static onPauseFunction = undefined;
     connectedCallback() {
         this.videoId = this.getAttribute('videoid');
-
         let playBtnEl = this.querySelector('.lty-playbtn');
         // A label for the button takes priority over a [playlabel] attribute on the custom-element
         this.playLabel = (playBtnEl && playBtnEl.textContent.trim()) || this.getAttribute('playlabel') || 'Play';
@@ -110,25 +112,61 @@ class LiteYTEmbed extends HTMLElement {
         let firstScriptTag = document.getElementsByTagName('script')[0];
         firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
-
+        // onPlayerStateChange.bind(this);
         const divEl = document.createElement('div');
         divEl.id = `player-${this.getAttribute("id")}`;
         this.append(divEl);
         this.player = new YT.Player(
             `player-${this.getAttribute("id")}`, {
                 width: '640',
-                /* 動画プレーヤーの幅 */
                 height: '360',
-                /* 動画プレーヤーの高さ */
+
                 videoId: encodeURIComponent(this.videoId),
-                /* YouTube動画ID */
+
+                playerVars: {'autoplay': 1, 'controls': 0},
+
                 events: {
                     /* イベント */
-                    "onReady": onPlayerReady /* プレーヤの準備完了時 */
+                    "onReady": onPlayerReady,
+                    "onStateChange":(event) => {
+                        if (event.data == YT.PlayerState.PLAYING) {
+                            event.target.setVolume(getController('controller').querySelector('[name=volume]').value);
+                            if (LiteYTEmbed.ActiveLiteYoutube &&
+                                LiteYTEmbed.ActiveLiteYoutube.getAttribute('id') !== this.getAttribute('id')){
+                                LiteYTEmbed.ActiveLiteYoutube.stop();
+                            }
+                            LiteYTEmbed.ActiveLiteYoutube = this;
+                            if (LiteYTEmbed.onPlayFunction){
+                                LiteYTEmbed.onPlayFunction();
+                            }
+
+                        }
+                        if (event.data == YT.PlayerState.PAUSED) {
+                            if (LiteYTEmbed.onPauseFunction){
+                                LiteYTEmbed.onPauseFunction();
+                            }
+                        }
+                    }
                 }
             }
         );
-
+      // function onPlayerStateChange(event) {
+      //     if (event.data == YT.PlayerState.PLAYING){
+      //         console.log("event.data == YT.PlayerState.PLAYING");
+      //         console.log(this);
+      //         console.log(LiteYTEmbed.ActiveLiteYoutube);
+      //         console.log(event !== LiteYTEmbed.ActiveLiteYoutube);
+      //     }
+      //
+      //   if (event.data == YT.PlayerState.PLAYING) {
+      //       LiteYTEmbed.ActiveLiteYoutube.stop();
+      //       LiteYTEmbed.ActiveLiteYoutube = event;
+      //       // console.log("停止された");
+      //   }
+      // }
+      function stopVideo() {
+        // player.stopVideo();
+      }
         function onPlayerReady(event) {
             event.target.playVideo();
             event.target.seekTo(params.start);
@@ -139,7 +177,7 @@ class LiteYTEmbed extends HTMLElement {
     }
 
     setVolume(volume) {
-        console.log(this.player.setVolume(volume));
+        this.player.setVolume(volume);
     }
 
     start() {
