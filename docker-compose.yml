@@ -19,13 +19,13 @@ services:
       context: .
       dockerfile: leonas-play-list-dockerfile
     restart: always
-    volumes:
-      - ./mongo:/data/db
-      - ./mongo:/data/configdb
 
   mongo:
     image: mongo:latest
     restart: always
+    volumes:
+      - ./mongo:/data/db
+      - ./mongo:/data/configdb
 
 
 volumes:
