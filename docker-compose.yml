@@ -11,11 +11,19 @@ services:
       STAGE: staging
     volumes:
       - https-portal-data:/var/lib/https-portal
+    restart: always
+
 
   leonas-play-list:
     build:
       context: .
       dockerfile: leonas-play-list-dockerfile
+    restart: always
+
+  mongo:
+    image: mongo:latest
+    restart: always
+
 
 volumes:
   https-portal-data:
