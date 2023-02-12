@@ -6,6 +6,8 @@ services:
     ports:
       - "80:80"
       - "443:443"
+    links:
+      - leonas-play-list
     environment:
       DOMAINS: 'test.leonas-play-list.com -> http://leonas-play-list:8899'
       STAGE: staging
