@@ -30,3 +30,4 @@ services:
 
 volumes:
   https-portal-data:
+  mongo:
