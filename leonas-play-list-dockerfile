@@ -1,0 +1,5 @@
+FROM: kennethreitz/pipenv
+WORKDIR /app/
+COPY ./ /app/
+RUN pipenv install
+CMD python3 server.py
