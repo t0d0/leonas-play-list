@@ -3,6 +3,5 @@ WORKDIR /app/
 COPY ./ /app/
 RUN pip install --upgrade pip && \
     pip install pipenv && \
-    pipenv install && \
-    pip list \
+    pipenv install
 CMD pipenv run python server.py
