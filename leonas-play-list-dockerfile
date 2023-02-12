@@ -5,4 +5,4 @@ RUN pip install --upgrade pip && \
     pip install pipenv && \
     pipenv install && \
     pip list \
-CMD ['python3' 'server.py']
+CMD pipenv run python server.py
