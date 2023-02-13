@@ -28,7 +28,16 @@ services:
     volumes:
       - ./mongo:/data/db
       - ./mongo:/data/configdb
-      - ./mongo:/data/bk
+      - ./volumes/mongo/backup:/backup
+      -
+  mongo-bk-cron:
+    build:
+      context: .
+      dockerfile: dind-cron-dockerfile
+    restart: always
+    env_file: .env
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
 
 volumes:
   https-portal-data:
