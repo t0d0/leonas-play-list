@@ -1,1 +1,1 @@
-40 04 * * * mongodump --port 27017 --out ./mongo:/data/bk/`date +\%Y\%m\%d\%H\%M` >> ./mongo:/data/bk/last_dump.log 2>&1
+48 04 * * * mongodump --port 27017 --out ./mongo:/data/bk/`date +\%Y\%m\%d\%H\%M` >> ./mongo:/data/bk/last_dump.log 2>&1
