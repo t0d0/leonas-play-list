@@ -21,12 +21,14 @@ services:
     restart: always
 
   mongo:
-    image: mongo:latest
+    build:
+      context: .
+      dockerfile: mongo-dockerfile
     restart: always
     volumes:
       - ./mongo:/data/db
       - ./mongo:/data/configdb
-
+      - - ./mongo:/data/bk
 
 volumes:
   https-portal-data:

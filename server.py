@@ -1,13 +1,15 @@
 # coding:utf-8
 import asyncio
 import os
-
+import schedule
+import time
 import tornado.httpserver
 import tornado.ioloop
 import tornado.web
 import sys
 
 from tornado.netutil import bind_sockets
+from multiprocessing import Process
 
 import lpl_handler
 from lpl_db import user_db, content_db, favorite_db
@@ -48,10 +50,23 @@ application = LPLApplication([
     cookie_secret=secret.cookie_secret,
     xsrf_cookies=True
 )
+# def do_task():
+#     print('タスク実行')
+#
+# def batch_run():
+#     schedule.every().day.at("02:00").do(do_task)
+#
+#     while True:
+#         schedule.run_pending()
+#         time.sleep(1)
+
 
 if __name__ == "__main__":
     server_port = config.port
     print("server start:" + str(server_port))
+    # batch_runner = Process(target=batch_run)
+    # batch_runner.start()
+
     if os.name == 'nt':
         print('on Windows')
         http_server = tornado.httpserver.HTTPServer(application)
@@ -68,6 +83,7 @@ if __name__ == "__main__":
             http_server = tornado.httpserver.HTTPServer(application)
             http_server.add_sockets(sockets)
             await asyncio.Event().wait()
+
 
 
         asyncio.run(post_fork_main())
