@@ -24,7 +24,7 @@ services:
     build:
       context: .
       dockerfile: mongo-dockerfile
-    restart: always
+#    restart: always
     volumes:
       - ./mongo:/data/db
       - ./mongo:/data/configdb
