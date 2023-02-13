@@ -29,7 +29,7 @@ services:
       - ./mongo:/data/db
       - ./mongo:/data/configdb
       - ./volumes/mongo/backup:/backup
-      -
+
   mongo-bk-cron:
     build:
       context: .
