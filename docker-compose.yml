@@ -28,7 +28,7 @@ services:
     volumes:
       - ./mongo:/data/db
       - ./mongo:/data/configdb
-      - - ./mongo:/data/bk
+      - ./mongo:/data/bk
 
 volumes:
   https-portal-data:
