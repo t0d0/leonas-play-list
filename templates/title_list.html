@@ -1,10 +1,11 @@
-{% import time %}
-{% import tornado %}
+{% import time as time%}
+{% import tornado as tornado%}
+{% from lpl_const import config %}
 
 <html>
 
 <head>
-    <title>Leona'sPlayList</title>
+    <title>{{ config.view_application_name }}</title>
     {% include module_common_meta.html %}
 
     <!--    メインCSS読み込み-->

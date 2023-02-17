@@ -1,12 +1,14 @@
-{% import time %}
+{% import time as time%}
 {% from dateutil import parser %}
 {% from pytz import timezone %}
-{% import tornado %}
+{% from lpl_const import config %}
+
+{% import tornado as tornado%}
 
 <html>
 
 <head>
-    <title>Leona'sPlayList</title>
+    <title>{{ config.view_application_name }}</title>
     {% include module_common_meta.html %}
 
     <!--    メインCSS読み込み-->

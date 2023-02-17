@@ -1,9 +1,10 @@
 {% import time as time %}
+{% from lpl_const import config %}
 
 <html lang="ja">
 
 <head>
-    <title>Leona'sPlayList</title>
+    <title>{{ config.view_application_name }}</title>
     {% include module_common_meta.html %}
     <script src="https://code.iconify.design/2/2.2.1/iconify.min.js"></script>
     <!--    youtubeのiframeが重すぎるので軽量化のライブラリ入れる-->
@@ -97,17 +98,6 @@
     </div>
 </div>
 </div>
-
-{##}
-{#    <nav>#}
-{#      <div class="nav-wrapper">#}
-{#        <a href="#!" class="brand-logo">Logo</a>#}
-{#        <ul class="right hide-on-med-and-down">#}
-{#          <li><a href="sass.html">Sass</a></li>#}
-{#          <li><a href="badges.html">Components</a></li>#}
-{#        </ul>#}
-{#      </div>#}
-{#    </nav>#}
 
 
 {% include module_about.html %}

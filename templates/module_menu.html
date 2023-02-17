@@ -1,6 +1,8 @@
+{% from lpl_const import config %}
+
 <nav class="amber fixed-header-content">
     <div class="nav-wrapper">
-        <p class="brand-logo title center" onselectstart="return false;">Leona'sPlayList</p>
+        <p class="brand-logo title center" onselectstart="return false;">{{ config.view_application_name }}</p>
         <ul class="left expand-search-area" onclick="expandSearch();">
             <form method="get" action="/">
                 <div class="input-field">
