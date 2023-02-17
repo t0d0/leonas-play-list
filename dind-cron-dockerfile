@@ -1,7 +1,7 @@
 FROM docker:dind
 USER root
 #RUN echo '0,10,20,30,40,50 * * * * docker exec -t mongo mongodump --port 27017 --out ./mongo:/data/bk/`date +\%Y\%m\%d\%H\%M` >> ./mongo:/data/bk/last_dump.log 2>&1' >> /etc/crontab
-RUN echo '* * * * * docker exec -t leonas-play-list_mongo_1 mongodump --port 27017 --out ./mongo:/data/bk/`date +\%Y\%m\%d\%H\%M` ' >> /etc/crontab
+RUN echo '* * * * * docker exec -t leonas-play-list_mongo_1 mongodump --port 27017 --out ./mongo:/backup/`date +\%Y\%m\%d\%H\%M` ' >> /etc/crontab
 
 RUN crontab /etc/crontab
 CMD ["sh", "-c", "crond -f"]
