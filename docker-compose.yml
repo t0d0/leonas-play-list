@@ -15,12 +15,16 @@ services:
 
 
   leonas-play-list:
+    environment:
+      - TZ=Asia/Tokyo
     build:
       context: .
       dockerfile: leonas-play-list-dockerfile
     restart: always
 
   mongo:
+    environment:
+      - TZ=Asia/Tokyo
     build:
       context: .
       dockerfile: mongo-dockerfile
@@ -31,6 +35,8 @@ services:
       - ./mongo/backup:/backup
 
   mongo-bk-cron:
+    environment:
+      - TZ=Asia/Tokyo
     build:
       context: .
       dockerfile: dind-cron-dockerfile
@@ -41,3 +47,4 @@ services:
 volumes:
   https-portal-data:
   mongo:
+
