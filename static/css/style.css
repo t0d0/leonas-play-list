@@ -54,7 +54,7 @@ body {
     position: fixed;
     bottom: 10px;
     right: 10px;
-    color: green;
+    /*color: green;*/
     /* border:1px solid #888888;*/
     padding: 2pt;
     /* background-color: #ffffff;*/
@@ -66,7 +66,7 @@ body {
 }
 
 .new-content-button circle {
-    background-color: orange;
+    /*background-color: orange;*/
 }
 
 .uk-search {
@@ -107,7 +107,7 @@ hr:after {
     position: relative;
     top: -15px;
     padding: 0 10px;
-    background: orange;
+    /*background: orange;*/
     color: #bbb;
     font-size: 18px;
 }
@@ -158,14 +158,6 @@ hr:after {
 . balloon-right p {
     margin: 0;
     padding: 0;
-}
-
-.foo {
-    background: #000;
-    width: 20px;
-    height: 100px;
-    margin: 100px;
-    animation: squash 1s ease-in-out infinite;
 }
 
 @keyframes squash {
@@ -374,9 +366,9 @@ body {
     display: none;
 }
 
-svg {
-    color: #ffab40;
-}
+/*svg {*/
+/*    color: #ffab40;*/
+/*}*/
 
 /*nav{*/
 /*    margin-top: -3rem;*/
@@ -531,4 +523,10 @@ display: none;
     #controller{
         display: none !important;
     }
+}
+.about-pre {
+    background-color: #222;
+    color: rgba(255, 255, 255, .7);
+    border-color: #222;
+    white-space: pre-wrap ;
 }

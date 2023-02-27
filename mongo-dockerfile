@@ -1,5 +1,2 @@
 FROM mongo:latest
-#RUN apt-get update && apt-get install -y cron
-#COPY mongo-backup-cronjob /etc/cron.d/my-cronjob
-#RUN chmod 0644 /etc/cron.d/my-cronjob
 CMD ["mongod"]

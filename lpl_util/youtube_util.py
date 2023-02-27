@@ -3,7 +3,7 @@ from dateutil.relativedelta import relativedelta
 from apiclient.discovery import build
 from lpl_const import secret
 
-youtube = build('youtube', 'v3', developerKey=secret.youtube_api_key)
+youtube = build('youtube', 'v3', developerKey=secret.YOUTUBE_API_KEY)
 
 def search(video_id):
     search_response = youtube.videos().list(

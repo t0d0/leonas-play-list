@@ -23,7 +23,7 @@ class LPLApplication(tornado.web.Application):
         self.content_db = content_db.ContentDb()
         self.user_db = user_db.UserDb()
         self.favorite_db = favorite_db.FavoriteDb()
-        self.salt = secret.salt
+        self.salt = secret.PASSWORD_SALT
         tornado.web.Application.__init__(self, handlers, **settings)
 
 
@@ -47,7 +47,7 @@ application = LPLApplication([
     template_path=os.path.join(os.getcwd(), "templates"),
     static_path=os.path.join(os.path.dirname(__file__), "static"),
     debug=True,
-    cookie_secret=secret.cookie_secret,
+    cookie_secret=secret.COOKIE_SECRET,
     xsrf_cookies=True
 )
 # def do_task():
@@ -62,7 +62,7 @@ application = LPLApplication([
 
 
 if __name__ == "__main__":
-    server_port = config.port
+    server_port = config.SERVER_PORT
     print("server start:" + str(server_port))
     # batch_runner = Process(target=batch_run)
     # batch_runner.start()

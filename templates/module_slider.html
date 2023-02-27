@@ -1,13 +1,11 @@
+{% from lpl_const import config %}
+
 <div class="slider">
     <ul class="slides">
+        {% for view_slider_image in config.WEB_VIEW_HEADER_IMAGES %}
         <li>
-            <img src="{{ static_url('image/yuki_leona_header_trim.avif') }}" alt="header-1">
+            <img src="{{ static_url('image/'+view_slider_image) }}" >
         </li>
-        <li>
-            <img src="{{ static_url('image/hiiragisan_leona.avif') }}" alt="header-2">
-        </li>
-        <li>
-            <img src="{{ static_url('image/yuki_leona_woy_large.avif') }}" alt="header-3">
-        </li>
+        {% end %}
     </ul>
 </div>

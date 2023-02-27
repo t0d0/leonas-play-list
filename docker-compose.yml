@@ -15,6 +15,8 @@ services:
 
 
   leonas-play-list:
+    ports:
+      - "8080:8899"
     environment:
       - TZ=Asia/Tokyo
     build:
