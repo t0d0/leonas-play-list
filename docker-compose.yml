@@ -22,7 +22,7 @@ services:
     build:
       context: .
       dockerfile: leonas-play-list-dockerfile
-    restart: always
+#    restart: always
 
   mongo:
     environment:
