@@ -3,6 +3,6 @@ WORKDIR /app/
 COPY ./ /app/
 RUN pip install --upgrade pip && \
     pip install pipenv && \
-    pipenv install && \
-    pipenv run python /app/daily_batch.py >> /app/daily_batch.log 2>&1
-CMD pipenv run python server.py
+    pipenv install
+CMD pipenv run python /app/daily_batch.py >> /app/daily_batch.log 2>&1 && \
+    pipenv run python server.py
