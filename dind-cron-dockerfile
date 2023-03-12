@@ -3,6 +3,6 @@ USER root
 
 RUN echo 'CRON_TZ=Asia/Tokyo' >> /etc/crontab
 RUN echo '15 2 * * * docker exec -t leonas-play-list_mongo_1 mongodump --port 27017 --out ./backup/`date +\%Y\%m\%d\%H\%M` ' >> /etc/crontab
-RUN echo '* * * * * docker exec -t leonas-play-list-leonas-play-list-1 "pipenv run python /app/daily_batch.py >> /app/daily_batch.log 2>&1"' >> /etc/crontab
+RUN echo '0 0 * * * docker exec -t leonas-play-list-leonas-play-list-1 "pipenv run python /app/daily_batch.py >> /app/daily_batch.log 2>&1"' >> /etc/crontab
 RUN crontab /etc/crontab
 CMD ["sh", "-c", "crond -f"]

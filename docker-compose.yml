@@ -7,16 +7,14 @@ services:
       - "80:80"
       - "443:443"
     environment:
-      DOMAINS: 'test.leonas-play-list.com -> http://leonas-play-list:8899'
+      DOMAINS: 'leonas-play-list.com -> http://leonas-play-list:8899'
       STAGE: staging
     volumes:
       - https-portal-data:/var/lib/https-portal
-    restart: always
+#    restart: always
 
 
   leonas-play-list:
-    ports:
-      - "8080:8899"
     environment:
       - TZ=Asia/Tokyo
     build:
@@ -42,7 +40,7 @@ services:
     build:
       context: .
       dockerfile: dind-cron-dockerfile
-    restart: always
+#    restart: always
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
 
