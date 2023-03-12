@@ -6,12 +6,14 @@ services:
     ports:
       - "80:80"
       - "443:443"
+    links:
+      - leonas-play-list
     environment:
       DOMAINS: 'leonas-play-list.com -> http://leonas-play-list:8899'
       STAGE: production
     volumes:
       - https-portal-data:/var/lib/https-portal
-#    restart: always
+    restart: always
 
 
   leonas-play-list:
