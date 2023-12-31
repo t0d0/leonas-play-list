@@ -123,6 +123,7 @@ class LiteYTEmbed extends HTMLElement {
                 height: '360',
 
                 videoId: encodeURIComponent(this.videoId),
+
                 playerVars: {
                     'autoplay': 1,
                     'controls': 0
@@ -155,13 +156,9 @@ class LiteYTEmbed extends HTMLElement {
         );
 
         function onPlayerReady(event) {
-            console.log(event.target)
-            console.log(params.start);
-            // event.target.startSeconds = params.start;
-            event.target.playVideo(params.start);
+            event.target.playVideo();
             event.target.seekTo(params.start,true);
             event.target.setVolume(getController('controller').querySelector('[name=volume]').value);
-
         }
 
         return;
@@ -172,7 +169,6 @@ class LiteYTEmbed extends HTMLElement {
     }
 
     start() {
-        console.log("start2")
         this.player.playVideo();
     }
 
