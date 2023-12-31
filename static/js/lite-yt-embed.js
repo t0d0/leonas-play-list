@@ -171,7 +171,7 @@ class LiteYTEmbed extends HTMLElement {
     }
 
     start() {
-        console.log("start")
+        console.log("start2")
         this.player.playVideo();
     }
 

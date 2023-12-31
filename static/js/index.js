@@ -354,6 +354,7 @@ function onChangeSearch(event){
 
 }
 function onClickPlayStatus(event){
+    console.log("start1")
     if(event === 'pause'){
         LiteYTEmbed.ActiveLiteYoutube.stop();
     }
