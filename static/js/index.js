@@ -382,6 +382,7 @@ function onChangeVolumeSlider(event){
 document.getElementById('volume-slider').setAttribute('value',value=localStorage.getItem('volume'));
 
 LiteYTEmbed.onPlayFunction = ()=>{
+    console.log("play");
     document.getElementById('current-playing-title').innerText =LiteYTEmbed.ActiveLiteYoutube.parentElement.parentElement.querySelector('#title').innerText;
     document.getElementById('play-status').innerText = 'pause';
 }
