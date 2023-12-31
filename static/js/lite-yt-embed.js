@@ -158,8 +158,8 @@ class LiteYTEmbed extends HTMLElement {
         function onPlayerReady(event) {
             console.log("onPlayerReady")
             console.log(params.start);
+            event.target.startSeconds = params.start;
             event.target.playVideo();
-            event.target.seekTo(params.start);
             event.target.setVolume(getController('controller').querySelector('[name=volume]').value);
         }
 
