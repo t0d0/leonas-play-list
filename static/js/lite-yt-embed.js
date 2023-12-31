@@ -125,7 +125,7 @@ class LiteYTEmbed extends HTMLElement {
                 videoId: encodeURIComponent(this.videoId),
 
                 playerVars: {
-                    'autoplay': 1,
+                    'autoplay': 0,
                     'controls': 0
                 },
 
@@ -159,7 +159,8 @@ class LiteYTEmbed extends HTMLElement {
             console.log(event.target)
             console.log(params.start);
             event.target.startSeconds = params.start;
-            event.target.playVideo();
+            event.target.playVideo(params.start);
+            event.target.seekTo();
             event.target.setVolume(getController('controller').querySelector('[name=volume]').value);
         }
 
