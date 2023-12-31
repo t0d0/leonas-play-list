@@ -123,7 +123,7 @@ class LiteYTEmbed extends HTMLElement {
                 height: '360',
 
                 videoId: encodeURIComponent(this.videoId),
-
+                start: params.start,
                 playerVars: {
                     'autoplay': 1,
                     'controls': 0
