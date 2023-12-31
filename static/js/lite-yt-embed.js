@@ -156,7 +156,7 @@ class LiteYTEmbed extends HTMLElement {
         );
 
         function onPlayerReady(event) {
-            console.log("onPlayerReady")
+            console.log(event.target)
             console.log(params.start);
             event.target.startSeconds = params.start;
             event.target.playVideo();
