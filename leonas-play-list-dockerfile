@@ -4,5 +4,6 @@ COPY ./ /app/
 RUN pip install --upgrade pip && \
     pip install pipenv && \
     pipenv install
-CMD pipenv run python /app/daily_batch.py && \
-    pipenv run python server.py
+#CMD pipenv run python /app/daily_batch.py && \
+#    pipenv run python server.py
+CMD pipenv run python server.py
